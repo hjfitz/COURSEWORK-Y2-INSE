@@ -26,6 +26,16 @@ public class DatabaseConnection {
                     err.printStackTrace();
             }
 	}
+        public ResultSet runQuery(String qry) {
+        	try {
+        		PreparedStatement statement = connection.prepareStatement(qry);
+        		ResultSet rs = statement.executeQuery();
+        		return rs;
+        	} catch(SQLException e) {
+        		e.printStackTrace();
+        	}
+        	return null;
+        }
         
         
         public ResultSet getSpecificRoute(String table, String from, String to){

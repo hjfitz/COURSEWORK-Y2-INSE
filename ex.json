@@ -1,0 +1,24 @@
+{
+  "type": "replace",
+  "route": [
+    { "name": "University Bus 1" },
+    { "name": "University Bus 2" },
+    { "name": "Southdowns College Bus 1" }
+  ],
+  "stop": [
+    { "name": "Langstone Campus" },
+    { "name": "Lidl" },
+    { "name": "Winston Churchill Avenue" }
+  ],
+  "arrival_times": [
+    { "time": "0830", "stop_id": 100 },
+    { "time": "0900", "stop_id": 101 },
+    { "time": "0930", "stop_id": 102 }
+  ],
+  "arrival_stop": [
+    { "route_id": 100, "arrival_id": 100 },
+    { "route_id": 101, "arrival_id": 101 },
+    { "route_id": 102, "arrival_id": 102 },
+    { "route_id": 100, "arrival_id": 101 }
+  ]
+}

@@ -1,4 +1,4 @@
-
+package main;
 
 import java.sql.*;
 
@@ -13,7 +13,7 @@ public class DatabaseConnection {
 	public void connect() {
             try {
                 connection = DriverManager.getConnection(host, user, password);
-                System.out.println("Successfully connected");
+                System.out.println("Successfully connected hello harry");
             } catch(SQLException err){
                 System.out.println(err.getMessage());
             }

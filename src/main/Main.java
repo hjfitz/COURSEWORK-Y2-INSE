@@ -12,12 +12,14 @@ import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JList;
 
@@ -111,6 +113,10 @@ public class Main extends JFrame {
 		lblArriveAt.setBounds(274, 110, 57, 16);
 		panel.add(lblArriveAt);
 		
+		
+				
+		
+		
 		JButton btnNewButton = new JButton("Search");
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
@@ -181,6 +187,28 @@ public class Main extends JFrame {
 		btnNewButton.setBounds(453, 176, 117, 29);
 		panel.add(btnNewButton);
 		
+		
+		JToggleButton btn_font = new JToggleButton("Font");
+		btn_font.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+		        JComponent elementList[] = {lblSearchForA, lblTo, comboBox, lblArriveAt, comboBox_1, comboBox_2, txtTime, btnNewButton, lblMostPopularRoutes};
+		        
+		        if (btn_font.isSelected()) {
+		            for (JComponent element : elementList) {
+		               element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() +  5 ));
+		            }
+		        }
+		        
+		        
+		        else {
+		            for (JComponent element : elementList) {
+		               element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() -  5 ));
+		            }
+		        }
+			}
+		});
+		btn_font.setBounds(10, 415, 99, 23);
+		panel.add(btn_font);
 		
 		
 		

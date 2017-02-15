@@ -21,6 +21,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JList;
 
 public class Main extends JFrame {
@@ -90,7 +91,7 @@ public class Main extends JFrame {
 		comboBox_2.setBounds(186, 177, 99, 27);
 		panel.add(comboBox_2);
 		
-		JLabel lblMostPopularRoutes = new JLabel("Most popular routes");
+		JLabel lblMostPopularRoutes = new JLabel("Most popular routes7yht6t");
 		lblMostPopularRoutes.setBounds(317, 338, 133, 16);
 		panel.add(lblMostPopularRoutes);
 		
@@ -188,6 +189,7 @@ public class Main extends JFrame {
 		panel.add(btnNewButton);
 		
 		
+
 		JToggleButton btn_font = new JToggleButton("Font");
 		btn_font.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -210,7 +212,21 @@ public class Main extends JFrame {
 		btn_font.setBounds(10, 415, 99, 23);
 		panel.add(btn_font);
 		
-		
+
+		table = new JTable();
+		table.setFont(new Font("Dialog", Font.BOLD, 12));
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+			},
+			new String[] {
+				"Route Name", "Time"
+			}
+		));
+		table.getColumnModel().getColumn(0).setPreferredWidth(149);
+		table.setBounds(76, 350, 577, 76);
+		panel.add(table);
+
 		
 		
 		

@@ -12,12 +12,14 @@ import java.sql.Time;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JToggleButton;
 
 public class Main extends JFrame {
 
@@ -60,7 +62,7 @@ public class Main extends JFrame {
 		
 		JLabel lblSearchForA = new JLabel("Search for a specific route");
 		lblSearchForA.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-		lblSearchForA.setBounds(257, 6, 248, 25);
+		lblSearchForA.setBounds(258, 6, 411, 25);
 		panel.add(lblSearchForA);
 		
 		JComboBox comboBox = new JComboBox();
@@ -75,12 +77,12 @@ public class Main extends JFrame {
 		panel.add(comboBox_1);
 		
 		JLabel lblTo = new JLabel("Depart from");
-		lblTo.setBounds(267, 43, 76, 16);
+		lblTo.setBounds(267, 43, 150, 16);
 		panel.add(lblTo);
 		
 		JComboBox comboBox_2 = new JComboBox();
 		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Arrive", "Depart"}));
-		comboBox_2.setBounds(274, 177, 99, 27);
+		comboBox_2.setBounds(258, 177, 99, 27);
 		panel.add(comboBox_2);
 		
 		JTextPane textPane = new JTextPane();
@@ -92,17 +94,17 @@ public class Main extends JFrame {
 		panel.add(textPane_1);
 		
 		JLabel lblMostPopularRoutes = new JLabel("Most popular routes");
-		lblMostPopularRoutes.setBounds(317, 338, 133, 16);
+		lblMostPopularRoutes.setBounds(310, 328, 188, 27);
 		panel.add(lblMostPopularRoutes);
 		
 		txtTime = new JTextField();
 		txtTime.setText("Time");
-		txtTime.setBounds(385, 177, 43, 26);
+		txtTime.setBounds(367, 176, 50, 26);
 		panel.add(txtTime);
 		txtTime.setColumns(10);
 		
 		JLabel lblArriveAt = new JLabel("Arrive at\n");
-		lblArriveAt.setBounds(274, 110, 57, 16);
+		lblArriveAt.setBounds(274, 110, 124, 16);
 		panel.add(lblArriveAt);
 		
 		JButton btnNewButton = new JButton("Search");
@@ -133,7 +135,29 @@ public class Main extends JFrame {
 			        
 			}
 		});
-		btnNewButton.setBounds(440, 177, 117, 29);
+		btnNewButton.setBounds(427, 176, 133, 29);
 		panel.add(btnNewButton);
+		
+		JToggleButton btn_font = new JToggleButton("Font");
+		btn_font.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+		        JComponent elementList[] = {lblSearchForA, lblTo, comboBox, lblArriveAt, comboBox_1, comboBox_2, txtTime, btnNewButton, lblMostPopularRoutes};
+		        
+		        if (btn_font.isSelected()) {
+		            for (JComponent element : elementList) {
+		               element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() +  5 ));
+		            }
+		        }
+		        
+		        
+		        else {
+		            for (JComponent element : elementList) {
+		               element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() -  5 ));
+		            }
+		        }
+			}
+		});
+		btn_font.setBounds(10, 415, 99, 23);
+		panel.add(btn_font);
 	}
 }

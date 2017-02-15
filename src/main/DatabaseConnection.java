@@ -1,4 +1,4 @@
-package main;
+
 
 import java.sql.*;
 
@@ -26,6 +26,7 @@ public class DatabaseConnection {
                     err.printStackTrace();
             }
 	}
+
         public ResultSet runQuery(String qry) {
         	try {
         		PreparedStatement statement = connection.prepareStatement(qry);
@@ -38,21 +39,36 @@ public class DatabaseConnection {
         }
         
         
-        public ResultSet getSpecificRoute(String table, String from, String to){
+        public ResultSet getSpecificRoute(String location, String hour, boolean departing){
             
-          String query = "select * from bustimes.Arrival_Times natural join Stop order by Arrival_Time";
+          String query = "select Arrival_Time, Stop_Name from Arrival_Times natural join Stop where (Stop_Name = ?)";
           
-         //where Stop_Name = ? || Stop_Name = ?"
+        		
+          if(departing){
+        	  query += "AND ARRIVAL_TIME >= ? order by Arrival_time";
+          }
+          else{
+        	  query += "AND ARRIVAL_TIME <= ? order by Arrival_time";
+          }
+          
+          
+         //
           
           // create the java statement
          try{
+        	 
+             PreparedStatement statement = connection.prepareStatement(query); 
+               
+             statement.setString(1, location);
             
-             PreparedStatement statement = connection.prepareStatement(query);    
-             //statement.setString(1, from);
-             //statement.setString(2, to);   
+             statement.setString(2, hour);
+             
+             System.out.println(statement);
+          
              ResultSet rs = statement.executeQuery();
              
-            return rs;
+             
+             return rs;
             
          
          }catch(SQLException e){
@@ -61,6 +77,8 @@ public class DatabaseConnection {
          
             return null;
         }
+        
+        
         
  
        

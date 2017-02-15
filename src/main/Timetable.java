@@ -22,7 +22,8 @@ import java.awt.event.MouseEvent;
 public class Timetable extends JFrame {
 	
 	static String thisStop = "101";
-	static String query = "select Route_Name, Arrival_Time from Arrival_Stop natural join Arrival_Times natural join Route where Stop_ID = " + thisStop;
+	static String qryGetRouteNums = "select distinct Route_ID, Route_Name from Arrival_Stop natural join Route natural join Arrival_Times where Stop_ID = " + thisStop;
+	static String qryGetRoutes = "Select Arrival_time from Arrival_Stop natural join Route natural join Arrival_Times where Route_ID = ";
 	private JPanel contentPane;
 	
 	public Timetable() {
@@ -86,22 +87,24 @@ public class Timetable extends JFrame {
 		
 	}
 	public static void getTimes(JTextPane updPane) {
-		System.out.println(query);
+		System.out.println(qryGetRouteNums);
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
-		ResultSet results = dbConn.runQuery(query);
+		ResultSet routeNumbers = dbConn.runQuery(qryGetRouteNums);
 		//System.out.println(results);
 		String newTextField = "";
 		try {
-			while (results.next()) {
-				//results.next();
-				Time stopTime = results.getTime("Arrival_Time");
-				String name = results.getString("Route_Name");
-				System.out.println(name);
-				System.out.println(stopTime.toString());
-				newTextField += name + "\t" + stopTime.toString() + "\n";
-				
+			
+			while (routeNumbers.next()) {
+				newTextField += routeNumbers.getString("Route_Name") + ":\t\t";
+				String qryGetTimes = qryGetRoutes +  routeNumbers.getInt("Route_ID") + " order by Arrival_Time";
+				ResultSet times = dbConn.runQuery(qryGetTimes);
+				while (times.next()){
+					newTextField += times.getTime("Arrival_Time").toString() + "\t";
+				}
+				newTextField += "\n";
 			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

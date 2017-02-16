@@ -6,8 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.Calendar;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -16,18 +18,20 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JList;
+import javax.swing.table.DefaultTableModel;
 
 public class Main extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtTime;
 	private JTable table;
+	private JTable table_1;
 
 	/**
 	 * Launch the application.
@@ -65,6 +69,10 @@ public class Main extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
+		JTextArea textArea = new JTextArea();
+		textArea.setBounds(92, 225, 596, 80);
+		panel.add(textArea);
+		
 		JLabel lblSearchForA = new JLabel("Search for a specific route");
 		lblSearchForA.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		lblSearchForA.setBounds(257, 6, 248, 25);
@@ -93,11 +101,6 @@ public class Main extends JFrame {
 		JLabel lblMostPopularRoutes = new JLabel("Most popular routes");
 		lblMostPopularRoutes.setBounds(317, 338, 133, 16);
 		panel.add(lblMostPopularRoutes);
-		
-		
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(69, 246, 630, 80);
-		panel.add(textArea);
 		
 		JTextArea textArea_1 = new JTextArea();
 		textArea_1.setBounds(186, 366, 394, 80);
@@ -129,6 +132,7 @@ public class Main extends JFrame {
 		         ArrayList<BusStop>fromStop = new ArrayList<BusStop>();
 		         ArrayList<BusStop>toStop = new ArrayList<BusStop>();
 		         Boolean departing;
+		         
 		         if(comboBox_2.getSelectedItem().toString() == "Depart"){
 		        	 departing = true;
 		         }else{
@@ -137,7 +141,7 @@ public class Main extends JFrame {
 		         
 		         
 		         ResultSet rs1 = conn.getSpecificRoute(from,hour,departing);
-		         
+		         ResultSet rs2;
 		         
 		         String time = "";
 		         
@@ -154,7 +158,15 @@ public class Main extends JFrame {
 				            
 			        	}
 			        	
-			        	ResultSet rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
+			        	if(departing){
+			        		rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
+			        		    Calendar cal = Calendar.getInstance();
+			        		    DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			        	        System.out.println(sdf.format(cal.getTime()));
+			        	}else{
+			        		rs2 = conn.getSpecificRoute(to, hour, departing);
+			        	}
+			        	
 			        	
 			        	while(rs2.next()){
 			            	
@@ -166,7 +178,9 @@ public class Main extends JFrame {
 				           
 			        
 				            
-			        	 for(int i = 0; i < fromStop.size(); i++){
+			        	
+			        	
+			        	 for(int i = 0; i < toStop.size(); i++){
 			        		 	//System.out.println(fromStop.get(i).getTime() + fromStop.get(i).getBusName());
 			        		 	//System.out.println(toStop.get(i).getTime() + toStop.get(i).getBusName());
 			        		 	
@@ -175,6 +189,8 @@ public class Main extends JFrame {
 					        	route =  "Depart at " + fromStop.get(i).getTime() + " Arrive at " + toStop.get(i).getTime() + 
 					        	" From " + fromStop.get(i).getBusName() + " To " + toStop.get(i).getBusName();
 					        	textArea.append(route + "\n");
+					        	
+					        	
 					        }
 			        	
 				            } catch (SQLException e1) {
@@ -219,9 +235,6 @@ public class Main extends JFrame {
 		});
 		btnViewTimetable.setBounds(590, 423, 124, 23);
 		panel.add(btnViewTimetable);
-		
-		
-		
 		
 		
 		

@@ -1,34 +1,23 @@
 package main;
 
+import java.util.ArrayList;
+
 import java.awt.EventQueue;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Vector;
-
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JList;
 
+@SuppressWarnings("serial")
 public class ParseForm extends JFrame {
 	
 	private JPanel contentPane;
-	private JTextField txtTime;
-	private JTable table;
 	private JTextField txtFileName;
+	private ArrayList<String> insQueries = new ArrayList<String>();
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -66,9 +55,13 @@ public class ParseForm extends JFrame {
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("parse invoked");
 				String filename = txtFileName.getText();
+				System.out.println(filename + " being used");
 				Parser parser = new Parser();
-				parser.parseFile(filename);
+				insQueries = parser.parseFile(filename);
+				updateDB(insQueries);
+				
 			}
 		});
 		btnUpdate.setBounds(326, 70, 89, 23);
@@ -77,5 +70,15 @@ public class ParseForm extends JFrame {
 		JLabel lblEnterTheName = new JLabel("Enter the name of the file to update");
 		lblEnterTheName.setBounds(36, 74, 228, 14);
 		panel.add(lblEnterTheName);
+	}
+	
+	private void updateDB(ArrayList<String> insQueries) {
+		DatabaseConnection dbConn = new DatabaseConnection();
+		dbConn.connect();
+		System.out.println("Attempting to insert new queries...");
+		for (String qry : insQueries) {
+			dbConn.runInsert(qry);
+		}
+		System.out.println("If there have been no errors, then the database has been successfully updated!");
 	}
 }

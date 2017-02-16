@@ -4,17 +4,14 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -23,18 +20,14 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-
-import javax.swing.JList;
-import javax.swing.SwingConstants;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.JScrollPane;
 
 
 public class Main extends JFrame {
@@ -46,6 +39,7 @@ public class Main extends JFrame {
 	private JLabel lbl_estimate;
 	private JToggleButton btn_font;
 	private JTextArea txtHints;
+	private JTable table_2;
 
 	/**
 	 * Launch the application.
@@ -95,10 +89,6 @@ public class Main extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(92, 225, 596, 80);
-		panel.add(textArea);
-		
 		JLabel lblSearchForA = new JLabel("Search for a specific route");
 		lblSearchForA.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		lblSearchForA.setBounds(198, 6, 295, 25);
@@ -111,7 +101,7 @@ public class Main extends JFrame {
 		panel.add(comboBox);
 		
 		JComboBox combo_Arrive = new JComboBox();
-		combo_Arrive.setModel(new DefaultComboBoxModel(new String[] {"Locks Way Road", "Lidl", "Fratton Station", "Cambridge Road", "Winston Churchill Ave", "gowno"}));
+		combo_Arrive.setModel(new DefaultComboBoxModel(new String[] {"Locks Way Road", "Lidl", "Fratton Station", "Cambridge Road", "Winston Churchill Ave"}));
 		combo_Arrive.setBounds(264, 138, 241, 27);
 		panel.add(combo_Arrive);
 		
@@ -192,7 +182,7 @@ public class Main extends JFrame {
 		         
 		        // System.out.println(rs);
 			        try {
-			        	textArea.setText("");
+			        	
 			        	
 			        	while(rs1.next()){
 			        		time = rs1.getTime("Arrival_Time").toString();
@@ -239,26 +229,35 @@ public class Main extends JFrame {
 				            
 			        	
 			        	
-			        	 for(int i = 0; i < toStop.size(); i++){
-			        		 	//System.out.println(fromStop.get(i).getTime() + fromStop.get(i).getBusName());
-			        		 	//System.out.println(toStop.get(i).getTime() + toStop.get(i).getBusName());
-			        		 	
-			        		 
-			        		 	
-					        	route =  "Depart at " + fromStop.get(i).getTime() + " Arrive at " + toStop.get(i).getTime() + 
-					        	" From " + fromStop.get(i).getBusName() + " To " + toStop.get(i).getBusName();
-					        	textArea.append(route + "\n");
-					        	
-					        	
-					        }
+
+			        	DefaultTableModel model = new DefaultTableModel(new String[]{"Depart at", "Arrive at", "From", "To", "Travel time"}, 0);
+		        		
 			        	
-				            } catch (SQLException | ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-			        
-			}
-		});
+			        		for(int i = 0; i < toStop.size(); i++){
+			        			//System.out.println(fromStop.get(i).getTime() + fromStop.get(i).getBusName());
+			        			//System.out.println(toStop.get(i).getTime() + toStop.get(i).getBusName());
+
+			        			String travel = fromStop.get(i).calculateTravelTime(toStop.get(i).getTime());
+
+			        		
+
+			        		model.addRow(new Object[]{fromStop.get(i).getTime(), toStop.get(i).getTime(), fromStop.get(i).getBusName(),toStop.get(i).getBusName(), travel});
+
+			        		table_2.setModel(model);
+			        		}
+
+
+			        	} catch (SQLException e1) {
+			        		// TODO Auto-generated catch block
+			        		e1.printStackTrace();
+			        	} catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+
+			        }
+			});
+		
 		btn_Search.setBounds(437, 176, 133, 29);
 		panel.add(btn_Search);
 		
@@ -293,23 +292,20 @@ public class Main extends JFrame {
 		
 
 
-		table = new JTable();
-		table.setFont(new Font("Dialog", Font.BOLD, 12));
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null},
-			},
-			new String[] {
-				"Route Name", "Time"
-			}
-		));
-		table.getColumnModel().getColumn(0).setPreferredWidth(149);
-		table.setBounds(10, 456, 765, 76);
-		panel.add(table);
+		
 		
 		lbl_estimate = new JLabel("Estimated Time until next bus: ");
 		lbl_estimate.setBounds(102, 326, 586, 25);
 		panel.add(lbl_estimate);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(102, 208, 619, 106);
+		panel.add(scrollPane);
+		
+		table_2 = new JTable();
+		scrollPane.setViewportView(table_2);
+		
+		
 		
 	
 		

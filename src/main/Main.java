@@ -74,10 +74,13 @@ public class Main extends JFrame {
 		
 		
 		btn_font = new JToggleButton("Toggle Font Size");
+		btn_font.setToolTipText("Tap to increase / decrease font size");
+
 		btn_font.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
 				txtHints.setText("Tap to increase / decrease font size");
+				
 				
 			}
 		});
@@ -95,6 +98,7 @@ public class Main extends JFrame {
 		panel.add(lblSearchForA);
 		
 		JComboBox comboBox = new JComboBox();
+		comboBox.setToolTipText("test");
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Locks Way Road", "Lidl", "Fratton Station", "Cambridge Road", "Winston Churchill Ave"}));
 		
 		comboBox.setBounds(264, 71, 241, 27);

@@ -160,13 +160,15 @@ public class Timetable extends JFrame {
 			}
 		});
 		
+		JButton btnUpdateRoutes = new JButton("Update Routes");
+		
 
 		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 						.addComponent(txtpnHints, GroupLayout.DEFAULT_SIZE, 1238, Short.MAX_VALUE)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addContainerGap()
@@ -179,17 +181,20 @@ public class Timetable extends JFrame {
 						.addGroup(gl_panel.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 1228, Short.MAX_VALUE))
-						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+						.addGroup(gl_panel.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(btnSearch)
-							.addGap(655)
-							.addComponent(btnDay, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-							.addGap(7)
-							.addComponent(btnWeek, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-							.addGap(3)
-							.addComponent(btnMonth, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnTemp, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)))
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnUpdateRoutes)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(btnSearch)
+									.addGap(655)
+									.addComponent(btnDay, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+									.addGap(7)
+									.addComponent(btnWeek, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+									.addGap(3)
+									.addComponent(btnMonth, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnTemp, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)))))
 					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
@@ -201,7 +206,9 @@ public class Timetable extends JFrame {
 						.addComponent(btnRefresh, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
 					.addGap(46)
 					.addComponent(lblNextBus, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-					.addGap(53)
+					.addGap(19)
+					.addComponent(btnUpdateRoutes)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnTemp, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)

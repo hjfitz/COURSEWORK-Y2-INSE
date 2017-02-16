@@ -32,6 +32,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import javax.swing.JList;
+import javax.swing.SwingConstants;
 
 
 public class Main extends JFrame {
@@ -66,7 +67,7 @@ public class Main extends JFrame {
 		
 		DatabaseConnection conn = new DatabaseConnection();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 817, 563);
+		setBounds(100, 100, 821, 772);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -75,10 +76,10 @@ public class Main extends JFrame {
 		
 		JToggleButton btn_font = new JToggleButton("Toggle Font Size");
 		btn_font.setBounds(636, 6, 155, 23);
-		contentPane.add(btn_font);
+		//contentPane.add(btn_font);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 6, 785, 507);
+		panel.setBounds(10, 6, 785, 717);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -112,14 +113,15 @@ public class Main extends JFrame {
 		panel.add(comboBox_2);
 		
 
-		JLabel lblMostPopularRoutes = new JLabel("Most popular routes7yht6t");
-		lblMostPopularRoutes.setBounds(317, 338, 133, 16);
+		JLabel lblMostPopularRoutes = new JLabel("Most popular routes");
+		lblMostPopularRoutes.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMostPopularRoutes.setBounds(10, 338, 765, 16);
 
 		panel.add(lblMostPopularRoutes);
 		
-		JTextArea textArea_1 = new JTextArea();
-		textArea_1.setBounds(186, 366, 394, 80);
-		panel.add(textArea_1);
+		JTextArea txtHints = new JTextArea();
+		txtHints.setBounds(10, 626, 765, 80);
+		panel.add(txtHints);
 		
 		txtTime = new JTextField();
 		txtTime.setText("Time");
@@ -232,11 +234,16 @@ public class Main extends JFrame {
 		btnNewButton.setBounds(437, 176, 133, 29);
 		panel.add(btnNewButton);
 		
-		JToggleButton btn_font = new JToggleButton("Font");
+		//JToggleButton btn_font = new JToggleButton("Toggle Font Size");
+		
+		JLabel lblHints = new JLabel("Hints");
+		lblHints.setBounds(10, 601, 46, 14);
+		panel.add(lblHints);
+		
 
 		btn_font.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-		        JComponent elementList[] = {lbl_Hints, lblSearchForA, lblTo, comboBox, lblArriveAt, comboBox_1, comboBox_2, txtTime, btnNewButton, lblMostPopularRoutes};
+		        JComponent elementList[] = {lblHints, lblSearchForA, lblTo, comboBox, lblArriveAt, comboBox_1, comboBox_2, txtTime, btnNewButton, lblMostPopularRoutes};
 		        
 		        if (btn_font.isSelected()) {
 		            for (JComponent element : elementList) {
@@ -253,7 +260,7 @@ public class Main extends JFrame {
 			}
 		});
 
-		btn_font.setBounds(10, 415, 99, 23);
+		//btn_font.setBounds(631, 592, 144, 23);
 		panel.add(btn_font);
 		
 
@@ -269,9 +276,10 @@ public class Main extends JFrame {
 			}
 		));
 		table.getColumnModel().getColumn(0).setPreferredWidth(149);
-		table.setBounds(76, 350, 577, 76);
+		table.setBounds(10, 378, 765, 76);
 		panel.add(table);
 		
+	
 		
 		
 		

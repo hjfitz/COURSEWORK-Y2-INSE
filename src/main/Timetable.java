@@ -23,6 +23,8 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JComboBox;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class Timetable extends JFrame {
 	
@@ -61,17 +63,12 @@ public class Timetable extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBounds(6, 6, 982, 466);
 		contentPane.add(panel);
-		panel.setLayout(null);
 		
 		JLabel lblNextBus = new JLabel("Next Bus: ?? Minutes");
 		lblNextBus.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNextBus.setBounds(12, 92, 958, 37);
-		panel.add(lblNextBus);
 		
 		JTextPane txtpnTimes = new JTextPane();
 		txtpnTimes.setText("");
-		txtpnTimes.setBounds(12, 218, 958, 236);
-		panel.add(txtpnTimes);
 		
 		JButton btnDay = new JButton("Day");
 		btnDay.addMouseListener(new MouseAdapter() {
@@ -81,8 +78,6 @@ public class Timetable extends JFrame {
 				
 			}
 		});
-		btnDay.setBounds(609, 181, 117, 25);
-		panel.add(btnDay);
 		
 		JButton btnWeek = new JButton("Week");
 		btnWeek.addMouseListener(new MouseAdapter() {
@@ -91,8 +86,6 @@ public class Timetable extends JFrame {
 				getTimes(txtpnTimes, "1 WEEK");
 			}
 		});
-		btnWeek.setBounds(733, 181, 117, 25);
-		panel.add(btnWeek);
 		
 		JButton btnMonth = new JButton("Month");
 		btnMonth.addMouseListener(new MouseAdapter() {
@@ -101,19 +94,13 @@ public class Timetable extends JFrame {
 				getTimes(txtpnTimes, "1 MONTH");
 			}
 		});
-		btnMonth.setBounds(853, 181, 117, 25);
-		panel.add(btnMonth);
 		
 		
 		
 		
 		JComboBox cmbRoutes = new JComboBox();
-		cmbRoutes.setBounds(12, 22, 805, 24);
-		panel.add(cmbRoutes);
 		
 		JButton btnTemp = new JButton("temp");
-		btnTemp.setBounds(480, 181, 117, 25);
-		panel.add(btnTemp);
 		
 		//start adding code here
 		
@@ -137,9 +124,50 @@ public class Timetable extends JFrame {
 				getTimes(txtpnTimes, "1 DAY");
 			}
 		});
-		btnRefresh.setBounds(829, 22, 141, 25);
-		panel.add(btnRefresh);
 		getStops(cmbRoutes);
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(12)
+					.addComponent(cmbRoutes, GroupLayout.PREFERRED_SIZE, 805, GroupLayout.PREFERRED_SIZE)
+					.addGap(12)
+					.addComponent(btnRefresh, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(12)
+					.addComponent(lblNextBus, GroupLayout.PREFERRED_SIZE, 958, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(480)
+					.addComponent(btnTemp, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+					.addGap(12)
+					.addComponent(btnDay, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+					.addGap(7)
+					.addComponent(btnWeek, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+					.addGap(3)
+					.addComponent(btnMonth, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(12)
+					.addComponent(txtpnTimes, GroupLayout.PREFERRED_SIZE, 958, GroupLayout.PREFERRED_SIZE))
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(22)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(cmbRoutes, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnRefresh, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+					.addGap(45)
+					.addComponent(lblNextBus, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+					.addGap(52)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnTemp, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnDay, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnWeek, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnMonth, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
+					.addGap(12)
+					.addComponent(txtpnTimes, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE))
+		);
+		panel.setLayout(gl_panel);
 	}
 	
 	

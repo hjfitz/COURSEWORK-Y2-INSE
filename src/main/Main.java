@@ -4,10 +4,15 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -58,14 +63,19 @@ public class Main extends JFrame {
 		
 		DatabaseConnection conn = new DatabaseConnection();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 750, 500);
+		setBounds(100, 100, 817, 563);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		
+		JToggleButton btn_font = new JToggleButton("Toggle Font Size");
+		btn_font.setBounds(636, 6, 155, 23);
+		contentPane.add(btn_font);
+		
 		JPanel panel = new JPanel();
-		panel.setBounds(6, 6, 738, 466);
+		panel.setBounds(10, 6, 785, 507);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -75,7 +85,7 @@ public class Main extends JFrame {
 		
 		JLabel lblSearchForA = new JLabel("Search for a specific route");
 		lblSearchForA.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-		lblSearchForA.setBounds(257, 6, 248, 25);
+		lblSearchForA.setBounds(257, 6, 295, 25);
 		panel.add(lblSearchForA);
 		
 		JComboBox comboBox = new JComboBox();
@@ -90,16 +100,16 @@ public class Main extends JFrame {
 		panel.add(comboBox_1);
 		
 		JLabel lblTo = new JLabel("Depart from");
-		lblTo.setBounds(267, 43, 76, 16);
+		lblTo.setBounds(267, 43, 108, 16);
 		panel.add(lblTo);
 		
 		JComboBox comboBox_2 = new JComboBox();
 		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Arrive", "Depart"}));
-		comboBox_2.setBounds(186, 177, 99, 27);
+		comboBox_2.setBounds(186, 177, 110, 27);
 		panel.add(comboBox_2);
 		
 		JLabel lblMostPopularRoutes = new JLabel("Most popular routes");
-		lblMostPopularRoutes.setBounds(317, 338, 133, 16);
+		lblMostPopularRoutes.setBounds(306, 331, 199, 24);
 		panel.add(lblMostPopularRoutes);
 		
 		JTextArea textArea_1 = new JTextArea();
@@ -108,12 +118,12 @@ public class Main extends JFrame {
 		
 		txtTime = new JTextField();
 		txtTime.setText("Time");
-		txtTime.setBounds(337, 177, 68, 26);
+		txtTime.setBounds(306, 177, 99, 26);
 		panel.add(txtTime);
 		txtTime.setColumns(10);
 		
 		JLabel lblArriveAt = new JLabel("Arrive at\n");
-		lblArriveAt.setBounds(274, 110, 57, 16);
+		lblArriveAt.setBounds(274, 110, 101, 16);
 		panel.add(lblArriveAt);
 		
 		
@@ -160,9 +170,23 @@ public class Main extends JFrame {
 			        	
 			        	if(departing){
 			        		rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
-			        		    Calendar cal = Calendar.getInstance();
-			        		    DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			        	        System.out.println(sdf.format(cal.getTime()));
+			        		    
+
+			        		   // String arriveTime = tFormat.format(fromStop.get(0).getTime());
+			        		    //Time ct = tFormat.parse(currentTime);
+			        			DateFormat formatter = new SimpleDateFormat("hh:mm");
+			        			java.util.Date currentTime = new java.util.Date();
+								java.util.Date arriveTime = formatter.parse(fromStop.get(0).getTime());
+								
+								System.err.println(currentTime);
+								System.err.println(arriveTime);
+								
+								long timeDiff = currentTime.getTime() - arriveTime.getTime(); 
+								System.out.println((timeDiff / 3600000) + " hours and " + (timeDiff % 3600000) / 60000 + " minutes");
+								
+			        		    
+			        		   
+
 			        	}else{
 			        		rs2 = conn.getSpecificRoute(to, hour, departing);
 			        	}
@@ -193,21 +217,22 @@ public class Main extends JFrame {
 					        	
 					        }
 			        	
-				            } catch (SQLException e1) {
+				            } catch (SQLException | ParseException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 			        
 			}
 		});
-		btnNewButton.setBounds(453, 176, 117, 29);
+		btnNewButton.setBounds(437, 176, 133, 29);
 		panel.add(btnNewButton);
 		
-		
-		JToggleButton btn_font = new JToggleButton("Font");
+		JLabel lbl_Hints = new JLabel("Hints");
+		lbl_Hints.setBounds(10, 457, 765, 39);
+		panel.add(lbl_Hints);
 		btn_font.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-		        JComponent elementList[] = {lblSearchForA, lblTo, comboBox, lblArriveAt, comboBox_1, comboBox_2, txtTime, btnNewButton, lblMostPopularRoutes};
+		        JComponent elementList[] = {lbl_Hints, lblSearchForA, lblTo, comboBox, lblArriveAt, comboBox_1, comboBox_2, txtTime, btnNewButton, lblMostPopularRoutes};
 		        
 		        if (btn_font.isSelected()) {
 		            for (JComponent element : elementList) {
@@ -223,8 +248,6 @@ public class Main extends JFrame {
 		        }
 			}
 		});
-		btn_font.setBounds(10, 415, 99, 23);
-		panel.add(btn_font);
 		
 		
 		

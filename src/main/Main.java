@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.Calendar;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -16,18 +16,20 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JList;
+import javax.swing.table.DefaultTableModel;
+import java.awt.Color;
 
 public class Main extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtTime;
-	private JTable table;
+	private JTable table_2;
 
 	/**
 	 * Launch the application.
@@ -77,7 +79,7 @@ public class Main extends JFrame {
 		panel.add(comboBox);
 		
 		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Locks Way Road", "Lidl", "Fratton Station", "Cambridge Road", "Winston Churchill Ave", "gowno"}));
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Locks Way Road", "Lidl", "Fratton Station", "Cambridge Road", "Winston Churchill Ave"}));
 		comboBox_1.setBounds(264, 138, 241, 27);
 		panel.add(comboBox_1);
 		
@@ -94,17 +96,15 @@ public class Main extends JFrame {
 		lblMostPopularRoutes.setBounds(317, 338, 133, 16);
 		panel.add(lblMostPopularRoutes);
 		
-		
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(69, 246, 630, 80);
-		panel.add(textArea);
-		
 		JTextArea textArea_1 = new JTextArea();
 		textArea_1.setBounds(186, 366, 394, 80);
 		panel.add(textArea_1);
+	
 		
+		String[] today = Calendar.getInstance().getTime().toString().split(" ");
+		String currentTime = today[3];
 		txtTime = new JTextField();
-		txtTime.setText("Time");
+		txtTime.setText(currentTime);
 		txtTime.setBounds(337, 177, 68, 26);
 		panel.add(txtTime);
 		txtTime.setColumns(10);
@@ -112,6 +112,18 @@ public class Main extends JFrame {
 		JLabel lblArriveAt = new JLabel("Arrive at\n");
 		lblArriveAt.setBounds(274, 110, 57, 16);
 		panel.add(lblArriveAt);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(63, 220, 630, 107);
+		panel.add(scrollPane);
+		
+		table_2 = new JTable();
+		scrollPane.setViewportView(table_2);
+		table_2.setBackground(new Color(255, 255, 255));
+		table_2.setFillsViewportHeight(true);
+		
+	
+		
 		
 		
 				
@@ -125,10 +137,11 @@ public class Main extends JFrame {
 				 String from = comboBox.getSelectedItem().toString();
 		         String to = comboBox_1.getSelectedItem().toString();
 		         String hour = txtTime.getText();
-		         String route = "";
+		         
 		         ArrayList<BusStop>fromStop = new ArrayList<BusStop>();
 		         ArrayList<BusStop>toStop = new ArrayList<BusStop>();
 		         Boolean departing;
+		         
 		         if(comboBox_2.getSelectedItem().toString() == "Depart"){
 		        	 departing = true;
 		         }else{
@@ -137,14 +150,14 @@ public class Main extends JFrame {
 		         
 		         
 		         ResultSet rs1 = conn.getSpecificRoute(from,hour,departing);
-		         
+		         ResultSet rs2;
 		         
 		         String time = "";
 		         
 		         
 		        // System.out.println(rs);
 			        try {
-			        	textArea.setText("");
+			        	//textArea.setText("");
 			        	
 			        	while(rs1.next()){
 			        		time = rs1.getTime("Arrival_Time").toString();
@@ -154,7 +167,12 @@ public class Main extends JFrame {
 				            
 			        	}
 			        	
-			        	ResultSet rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
+			        	if(departing){
+			        		rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
+			        	}else{
+			        		rs2 = conn.getSpecificRoute(to, hour, departing);
+			        	}
+			        	
 			        	
 			        	while(rs2.next()){
 			            	
@@ -166,21 +184,27 @@ public class Main extends JFrame {
 				           
 			        
 				            
-			        	 for(int i = 0; i < fromStop.size(); i++){
+			        		
+			        	 DefaultTableModel model = new DefaultTableModel(new String[]{"Depart at", "Arrive at", "From", "To", "Travel time"}, 0);
+			        	 for(int i = 0; i < toStop.size(); i++){
 			        		 	//System.out.println(fromStop.get(i).getTime() + fromStop.get(i).getBusName());
 			        		 	//System.out.println(toStop.get(i).getTime() + toStop.get(i).getBusName());
 			        		 	
+			        		 	String travel = fromStop.get(i).calculateTravelTime(toStop.get(i).getTime());
+			        		
 			        		 
-			        		 	
-					        	route =  "Depart at " + fromStop.get(i).getTime() + " Arrive at " + toStop.get(i).getTime() + 
-					        	" From " + fromStop.get(i).getBusName() + " To " + toStop.get(i).getBusName();
-					        	textArea.append(route + "\n");
-					        }
+			        		
+			        		 model.addRow(new Object[]{fromStop.get(i).getTime(), toStop.get(i).getTime(), fromStop.get(i).getBusName(),toStop.get(i).getBusName(), travel});
+			        		 
+			        		 table_2.setModel(model);
+					        	
+			        	 }
 			        	
 				            } catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+			        
 			        
 			}
 		});
@@ -209,10 +233,6 @@ public class Main extends JFrame {
 		});
 		btn_font.setBounds(10, 415, 99, 23);
 		panel.add(btn_font);
-		
-		
-		
-		
 		
 		
 		

@@ -32,11 +32,15 @@ public class Parser {
          * 
          */
         public static void main(String[] args) {
+        }
+        
+        @SuppressWarnings("unchecked")
+		public void parseFile(String filename) {
             
             JSONParser parser = new JSONParser();
             try {
                 //attempt to read main file
-                Object obj                = parser.parse(new FileReader("ex.json"));
+                Object obj                = parser.parse(new FileReader(filename));
                 JSONObject newInfo        = (JSONObject) obj;
                 // all items in the json file are stored in to their jsonarray counterparts
                 //until they're looped and turned in to queries

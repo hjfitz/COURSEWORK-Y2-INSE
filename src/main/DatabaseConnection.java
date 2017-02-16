@@ -28,7 +28,6 @@ public class DatabaseConnection {
         public void closeConnection() {
 		try {
                     connection.close();
-                    System.out.println("Database disconnected successfully");
 		} catch(SQLException err){
                     err.printStackTrace();
             }

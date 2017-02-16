@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,22 +22,21 @@ import org.json.simple.parser.ParseException;
  * @author hjf
  */
 public class Parser {
+	
+		private static ArrayList<String> insQueries = new ArrayList<String>();
     
         /**
          * 
-         * @param args Not used
-         * 
-         * Main: Searches for the new file, ex.json CHANGEME and splits in to arrays.
-         * Then transfers in to query Stings, stored in a global arraylist
+         * @param {filename} The file to read the queries and change to INSERT queries
+         *          * 
+         * parseFile: Given a json file, this method creates insert queries for SQL
+         * It transfers in to query Stings, stored in a global arraylist
          * Should then iterate through the arraylist and update the database.
          * 
          */
-        public static void main(String[] args) {
-        }
-        
         @SuppressWarnings("unchecked")
-		public void parseFile(String filename) {
-            
+		public ArrayList<String> parseFile(String filename) {
+            System.out.println("parseFile invoked with " + filename);
             JSONParser parser = new JSONParser();
             try {
                 //attempt to read main file
@@ -82,12 +82,14 @@ public class Parser {
                     createQuery("Arrival_Stop", "Route_ID", routeID, "Arrival_ID", arrivalID);
                 }
             } catch (FileNotFoundException e) {
+            	System.out.println("file not found");
             } catch (IOException | ParseException e) {
                 //need to change these to message boxes.
                 System.out.println("There was an issue with parsing the file!");
                 System.out.println("Either it doesn't exist, or there is a syntax error in the JSON file");
                 System.out.println(e);
             }
+            return insQueries;
 
     }
         
@@ -128,6 +130,7 @@ public class Parser {
         }
         String query = qryStart + qryValues + "" + qryEnd;
         System.out.println(query);
+        insQueries.add(query);
     }
  
 }

@@ -34,6 +34,7 @@ public class DatabaseConnection {
 	}
 
         public ResultSet runQuery(String qry) {
+        	System.out.println("Attempting to run query: " + qry + "\n\n");
         	try {
         		PreparedStatement statement = connection.prepareStatement(qry);
         		ResultSet rs = statement.executeQuery();
@@ -42,6 +43,16 @@ public class DatabaseConnection {
         		e.printStackTrace();
         	}
         	return null;
+        }
+        
+        public void runInsert(String qry) {
+        	System.out.println("Attempting to update database with: " + qry + "\n\n");
+        	try {
+        		PreparedStatement stmnt = connection.prepareStatement(qry);
+        		int result = stmnt.executeUpdate();
+        	} catch(SQLException e) {
+        		e.printStackTrace();
+        	}
         }
         
         

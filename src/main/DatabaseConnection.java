@@ -13,7 +13,7 @@ public class DatabaseConnection {
 	public void connect() {
             try {
                 connection = DriverManager.getConnection(host, user, password);
-                System.out.println("Successfully connected hello harry");
+                System.out.println("Successfully connected to database.");
             } catch(SQLException err){
                 System.out.println(err.getMessage());
             }
@@ -22,6 +22,7 @@ public class DatabaseConnection {
         public void closeConnection() {
 		try {
                     connection.close();
+                    System.out.println("Database disconnected successfully");
 		} catch(SQLException err){
                     err.printStackTrace();
             }

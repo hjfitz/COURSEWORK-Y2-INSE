@@ -9,6 +9,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.swing.JTextPane;
@@ -48,28 +50,27 @@ public class Timetable extends JFrame {
 
 	
 	public Timetable() {
-		//System.out.println(qryGetRouteNums);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 750, 500);
+		setBounds(100, 100, 1000, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(6, 6, 738, 466);
+		panel.setBounds(6, 6, 982, 466);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblNextBus = new JLabel("Next Bus: ?? Minutes");
 		lblNextBus.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNextBus.setBounds(12, 41, 714, 37);
+		lblNextBus.setBounds(12, 92, 958, 37);
 		panel.add(lblNextBus);
 		
 		JTextPane txtpnTimes = new JTextPane();
 		txtpnTimes.setText("");
-		txtpnTimes.setBounds(12, 218, 687, 236);
+		txtpnTimes.setBounds(12, 218, 958, 236);
 		panel.add(txtpnTimes);
 		
 		JButton btnDay = new JButton("Day");
@@ -80,7 +81,7 @@ public class Timetable extends JFrame {
 				
 			}
 		});
-		btnDay.setBounds(322, 149, 117, 25);
+		btnDay.setBounds(609, 181, 117, 25);
 		panel.add(btnDay);
 		
 		JButton btnWeek = new JButton("Week");
@@ -90,7 +91,7 @@ public class Timetable extends JFrame {
 				getTimes(txtpnTimes, "1 WEEK");
 			}
 		});
-		btnWeek.setBounds(451, 149, 117, 25);
+		btnWeek.setBounds(733, 181, 117, 25);
 		panel.add(btnWeek);
 		
 		JButton btnMonth = new JButton("Month");
@@ -100,18 +101,18 @@ public class Timetable extends JFrame {
 				getTimes(txtpnTimes, "1 MONTH");
 			}
 		});
-		btnMonth.setBounds(580, 149, 117, 25);
+		btnMonth.setBounds(853, 181, 117, 25);
 		panel.add(btnMonth);
 		
 		
 		
 		
 		JComboBox cmbRoutes = new JComboBox();
-		cmbRoutes.setBounds(64, 5, 175, 24);
+		cmbRoutes.setBounds(12, 22, 805, 24);
 		panel.add(cmbRoutes);
 		
 		JButton btnTemp = new JButton("temp");
-		btnTemp.setBounds(76, 131, 117, 25);
+		btnTemp.setBounds(480, 181, 117, 25);
 		panel.add(btnTemp);
 		
 		//start adding code here
@@ -132,12 +133,11 @@ public class Timetable extends JFrame {
 		btnRefresh.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//getStops(cmbRoutes);
 				changeRouteNo(cmbRoutes);
-				//System.out.println(thisStop);
+				getTimes(txtpnTimes, "1 DAY");
 			}
 		});
-		btnRefresh.setBounds(253, 5, 117, 25);
+		btnRefresh.setBounds(829, 22, 141, 25);
 		panel.add(btnRefresh);
 		getStops(cmbRoutes);
 	}
@@ -158,6 +158,15 @@ public class Timetable extends JFrame {
 		
 	}
 	
+	private static String parseDate(String date) throws ParseException {
+		SimpleDateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date parsedDate = iso8601.parse(date);
+		iso8601.applyPattern("EEE dd-MMM");
+		String day = iso8601.format(parsedDate);
+		System.out.println(day);
+		return day;
+	}
+	
 	/**
 	 * 
 	 * @param updPane the text pane to append the new text
@@ -168,31 +177,32 @@ public class Timetable extends JFrame {
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
 		String qryGetRouteNums = qryGetRouteNumsStart + thisStop;// + qryGetRouteNumsEnd + curDate + "'";
-		if (constraints != "") {
-//			System.out.println(constraints);
-			//qryGetRouteNums += "and Arrival_Time <= (SELECT '" + curDate + "' + INTERVAL " + constraints +")";
-		}
-		System.out.println(qryGetRouteNums);
 		ResultSet routeNumbers = dbConn.runQuery(qryGetRouteNums);
 		String newTextField = "";
+		String date = "";
 		try {
 			
 			while (routeNumbers.next()) {
-				newTextField += routeNumbers.getString("Route_Name") + ":\t\t";
+				newTextField += routeNumbers.getString("Route_Name") + ":\t";
 				String qryGetTimes = qryGetRoutes +  routeNumbers.getInt("Route_ID") + " and Stop_ID = " + thisStop  + qryGetRouteNumsEnd + curDate + "'";
 				if (constraints != "") {
-					System.out.println(constraints);
 					qryGetTimes += "and Arrival_Time <= (SELECT '" + curDate + "' + INTERVAL " + constraints +")";
 				}
 				qryGetTimes += " order by Arrival_Time ";
-				System.out.println(qryGetTimes);
 				ResultSet times = dbConn.runQuery(qryGetTimes);
 				while (times.next()){
-					newTextField += times.getDate("Arrival_Time").toString() + " " + times.getTime("Arrival_Time").toString() + "\t";
+					try {
+						date = parseDate(times.getDate("Arrival_Time").toString());
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					String out = date + " " + times.getTime("Arrival_Time").toString() + "  |  ";
+					newTextField += out;
+					//newTextField += times.getDate("Arrival_Time").toString() + " " + times.getTime("Arrival_Time").toString() + "\t";
 					//newTextField += " " + times.getTime("Arrival_Time").toString() + "\t";
 
 				}
-				newTextField += "\n";
+				newTextField += "\n\n\n";
 			}
 			
 		} catch (SQLException e) {
@@ -224,17 +234,23 @@ public class Timetable extends JFrame {
 	
 	public static void getStops(JComboBox box) {
 		String qry = "Select distinct * from Stop";
+		String curStopName = "";
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
 		ResultSet stopNames = dbConn.runQuery(qry);
 		try {
 			while (stopNames.next()) {
+				String curStopID = ""+stopNames.getInt("Stop_ID");
 				String curStop = stopNames.getString("Stop_Name");
 				box.addItem(curStop);
+				if (curStopID.equals(thisStop)) {
+					curStopName = curStop;
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbConn.closeConnection();
+		box.setSelectedItem(curStopName);
 	}
 }

@@ -17,13 +17,9 @@ public class DatabaseConnection {
 	public void connect() {
             try {
                 connection = DriverManager.getConnection(host, user, password);
-<<<<<<< HEAD
-                System.out.println("Successfully connected hello harry");
-=======
 
                 System.out.println("Successfully connected to database.");
 
->>>>>>> origin/timetable
             } catch(SQLException err){
                 System.out.println(err.getMessage());
             }

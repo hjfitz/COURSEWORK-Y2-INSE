@@ -31,6 +31,9 @@ import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import javax.swing.JList;
+
+
 public class Main extends JFrame {
 
 	private JPanel contentPane;
@@ -108,8 +111,10 @@ public class Main extends JFrame {
 		comboBox_2.setBounds(186, 177, 110, 27);
 		panel.add(comboBox_2);
 		
-		JLabel lblMostPopularRoutes = new JLabel("Most popular routes");
-		lblMostPopularRoutes.setBounds(306, 331, 199, 24);
+
+		JLabel lblMostPopularRoutes = new JLabel("Most popular routes7yht6t");
+		lblMostPopularRoutes.setBounds(317, 338, 133, 16);
+
 		panel.add(lblMostPopularRoutes);
 		
 		JTextArea textArea_1 = new JTextArea();
@@ -227,9 +232,8 @@ public class Main extends JFrame {
 		btnNewButton.setBounds(437, 176, 133, 29);
 		panel.add(btnNewButton);
 		
-		JLabel lbl_Hints = new JLabel("Hints");
-		lbl_Hints.setBounds(10, 457, 765, 39);
-		panel.add(lbl_Hints);
+		JToggleButton btn_font = new JToggleButton("Font");
+
 		btn_font.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 		        JComponent elementList[] = {lbl_Hints, lblSearchForA, lblTo, comboBox, lblArriveAt, comboBox_1, comboBox_2, txtTime, btnNewButton, lblMostPopularRoutes};
@@ -252,16 +256,21 @@ public class Main extends JFrame {
 		btn_font.setBounds(10, 415, 99, 23);
 		panel.add(btn_font);
 		
-		JButton btnViewTimetable = new JButton("View Timetable");
-		btnViewTimetable.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Timetable timeForm = new Timetable();
-				timeForm.setVisible(true);
-			}
-		});
-		btnViewTimetable.setBounds(590, 423, 124, 23);
-		panel.add(btnViewTimetable);
 
+
+		table = new JTable();
+		table.setFont(new Font("Dialog", Font.BOLD, 12));
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+			},
+			new String[] {
+				"Route Name", "Time"
+			}
+		));
+		table.getColumnModel().getColumn(0).setPreferredWidth(149);
+		table.setBounds(76, 350, 577, 76);
+		panel.add(table);
 		
 		
 		

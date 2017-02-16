@@ -210,6 +210,16 @@ public class Main extends JFrame {
 		btn_font.setBounds(10, 415, 99, 23);
 		panel.add(btn_font);
 		
+		JButton btnViewTimetable = new JButton("View Timetable");
+		btnViewTimetable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Timetable timeForm = new Timetable();
+				timeForm.setVisible(true);
+			}
+		});
+		btnViewTimetable.setBounds(590, 423, 124, 23);
+		panel.add(btnViewTimetable);
+		
 		
 		
 		

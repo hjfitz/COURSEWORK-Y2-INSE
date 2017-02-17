@@ -29,6 +29,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 
+@SuppressWarnings("serial")
 public class Main extends JFrame {
 
 	private JPanel contentPane;
@@ -61,6 +62,7 @@ public class Main extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Main() {
 
 		DatabaseConnection conn = new DatabaseConnection();
@@ -158,7 +160,8 @@ public class Main extends JFrame {
 				 String from = comboBox.getSelectedItem().toString();
 		         String to = combo_Arrive.getSelectedItem().toString();
 		         String hour = txtTime.getText();
-		         String route = "";
+		         @SuppressWarnings("unused")
+				String route = "";
 		         ArrayList<BusStop>fromStop = new ArrayList<BusStop>();
 		         ArrayList<BusStop>toStop = new ArrayList<BusStop>();
 		         Boolean departing;
@@ -171,6 +174,16 @@ public class Main extends JFrame {
 		         
 		         
 		         ResultSet rs1 = conn.getSpecificRoute(from,hour,departing);
+		         ResultSet popRoutes = conn.getPopRoutes(from,hour,departing);
+		         System.out.println("Stop IDs");
+		         try {
+		        	 while (popRoutes.next()) {
+		        		 System.out.println(popRoutes.getInt("Stop_ID"));
+		        	 }
+		         } catch (SQLException e3) {
+		        	 e3.printStackTrace();
+		         }
+		         System.out.println("end of stop ids");
 		         ResultSet rs2;
 		         
 		         String time = "";
@@ -284,14 +297,24 @@ public class Main extends JFrame {
 		panel.add(btn_font);
 
 		lbl_estimate = new JLabel("Estimated Time until next bus: ");
-		lbl_estimate.setBounds(102, 326, 586, 25);
+		lbl_estimate.setBounds(107, 381, 586, 25);
 		panel.add(lbl_estimate);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(102, 208, 619, 106);
+		scrollPane.setBounds(102, 208, 619, 162);
 		panel.add(scrollPane);
 		
 		table_2 = new JTable();
 		scrollPane.setViewportView(table_2);
+		
+		JButton btnViewTimetables = new JButton("View timetables");
+		btnViewTimetables.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Timetable timeForm = new Timetable();
+				timeForm.setVisible(true);
+			}
+		});
+		btnViewTimetables.setBounds(620, 40, 155, 23);
+		panel.add(btnViewTimetables);
 	}
 }

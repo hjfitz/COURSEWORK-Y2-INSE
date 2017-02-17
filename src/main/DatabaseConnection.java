@@ -78,7 +78,7 @@ public class DatabaseConnection {
 	public ResultSet getSpecificRoute(String location, String hour, boolean departing) {
 		String query = "select Arrival_Time, Stop_Name from Arrival_Times natural join Stop where (Stop_Name = ?)";
 		if (departing) {
-			query += " AND ARRIVAL_TIME >= ? order by Arrival_time";
+			query += " AND ARRIVAL_TIME >= ? AND ARRIVAL_TIME <= ? order by Arrival_time";
 		} else {
 			query += " AND ARRIVAL_TIME <= ? order by Arrival_time";
 		}
@@ -88,6 +88,7 @@ public class DatabaseConnection {
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setString(1, location);
 			statement.setString(2, "2017-02-15 " + hour);
+			statement.setString(3, "2017-02-15 19:00:00");
 			System.out.println(statement);
 			ResultSet rs = statement.executeQuery();
 			return rs;

@@ -29,7 +29,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 
-
 public class Main extends JFrame {
 
 	private JPanel contentPane;
@@ -44,7 +43,7 @@ public class Main extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
@@ -63,7 +62,7 @@ public class Main extends JFrame {
 	 * Create the frame.
 	 */
 	public Main() {
-		
+
 		DatabaseConnection conn = new DatabaseConnection();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 821, 772);
@@ -71,7 +70,7 @@ public class Main extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+	
 		
 		btn_font = new JToggleButton("Toggle Font Size");
 		btn_font.setToolTipText("Tap to increase / decrease font size");
@@ -87,23 +86,25 @@ public class Main extends JFrame {
 		btn_font.setBounds(620, 11, 155, 23);
 		//contentPane.add(btn_font);
 		
+
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 6, 785, 717);
 		contentPane.add(panel);
 		panel.setLayout(null);
-		
+
 		JLabel lblSearchForA = new JLabel("Search for a specific route");
 		lblSearchForA.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		lblSearchForA.setBounds(198, 6, 295, 25);
 		panel.add(lblSearchForA);
-		
+
 		JComboBox comboBox = new JComboBox();
+
 		comboBox.setToolTipText("test");
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Locks Way Road", "Lidl", "Fratton Station", "Cambridge Road", "Winston Churchill Ave"}));
-		
+
 		comboBox.setBounds(264, 71, 241, 27);
 		panel.add(comboBox);
-		
+	
 		JComboBox combo_Arrive = new JComboBox();
 		combo_Arrive.setModel(new DefaultComboBoxModel(new String[] {"Locks Way Road", "Lidl", "Fratton Station", "Cambridge Road", "Winston Churchill Ave"}));
 		combo_Arrive.setBounds(264, 138, 241, 27);
@@ -112,12 +113,11 @@ public class Main extends JFrame {
 		JLabel lblTo = new JLabel("Depart from");
 		lblTo.setBounds(267, 43, 108, 16);
 		panel.add(lblTo);
-		
+
 		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Arrive", "Depart"}));
+		comboBox_2.setModel(new DefaultComboBoxModel(new String[] { "Arrive", "Depart" }));
 		comboBox_2.setBounds(186, 177, 110, 27);
 		panel.add(comboBox_2);
-		
 
 		JLabel lblMostPopularRoutes = new JLabel("Most popular routes");
 		lblMostPopularRoutes.setHorizontalAlignment(SwingConstants.CENTER);
@@ -129,7 +129,7 @@ public class Main extends JFrame {
 		txtHints.setBounds(10, 626, 765, 80);
 		panel.add(txtHints);
 		txtHints.setText("Welcome to FlashClould! Tap [Search] to display all buses coming here next.");
-		
+
 		txtTime = new JTextField();
 		txtTime.addMouseListener(new MouseAdapter() {
 			@Override
@@ -143,15 +143,11 @@ public class Main extends JFrame {
 		txtTime.setBounds(315, 176, 99, 26);
 		panel.add(txtTime);
 		txtTime.setColumns(10);
-		
+
 		JLabel lblArriveAt = new JLabel("Arrive at\n");
 		lblArriveAt.setBounds(264, 111, 60, 16);
 		panel.add(lblArriveAt);
-		
-		
-				
-		
-		
+
 		JButton btn_Search = new JButton("Search");
 		btn_Search.addMouseListener(new MouseAdapter() {
 			@Override
@@ -264,13 +260,10 @@ public class Main extends JFrame {
 		
 		btn_Search.setBounds(437, 176, 133, 29);
 		panel.add(btn_Search);
-		
-		//JToggleButton btn_font = new JToggleButton("Toggle Font Size");
-		
+
 		JLabel lblHints = new JLabel("Hints");
 		lblHints.setBounds(10, 601, 46, 14);
 		panel.add(lblHints);
-		
 
 		btn_font.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -291,13 +284,9 @@ public class Main extends JFrame {
 			}
 		});
 
-		//btn_font.setBounds(631, 592, 144, 23);
+		// btn_font.setBounds(631, 592, 144, 23);
 		panel.add(btn_font);
-		
 
-
-		
-		
 		lbl_estimate = new JLabel("Estimated Time until next bus: ");
 		lbl_estimate.setBounds(102, 326, 586, 25);
 		panel.add(lbl_estimate);
@@ -308,13 +297,5 @@ public class Main extends JFrame {
 		
 		table_2 = new JTable();
 		scrollPane.setViewportView(table_2);
-		
-		
-		
-	
-		
-		
-		
-		
 	}
 }

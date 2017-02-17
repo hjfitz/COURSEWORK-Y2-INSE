@@ -14,7 +14,7 @@ import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
 public class ParseForm extends JFrame {
-	
+
 	private JPanel contentPane;
 	private JTextField txtFileName;
 	private ArrayList<String> insQueries = new ArrayList<String>();
@@ -32,7 +32,7 @@ public class ParseForm extends JFrame {
 			}
 		});
 	}
-	
+
 	public ParseForm() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 497, 208);
@@ -40,18 +40,18 @@ public class ParseForm extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBounds(6, 6, 465, 159);
 		contentPane.add(panel);
 		panel.setLayout(null);
-		
+
 		txtFileName = new JTextField();
 		txtFileName.setBounds(215, 71, 101, 20);
 		panel.add(txtFileName);
 		txtFileName.setColumns(10);
 		txtFileName.setText("update.json");
-		
+
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -61,17 +61,17 @@ public class ParseForm extends JFrame {
 				Parser parser = new Parser();
 				insQueries = parser.parseFile(filename);
 				updateDB(insQueries);
-				
+
 			}
 		});
 		btnUpdate.setBounds(326, 70, 89, 23);
 		panel.add(btnUpdate);
-		
+
 		JLabel lblEnterTheName = new JLabel("Enter the name of the file to update");
 		lblEnterTheName.setBounds(36, 74, 228, 14);
 		panel.add(lblEnterTheName);
 	}
-	
+
 	private void updateDB(ArrayList<String> insQueries) {
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();

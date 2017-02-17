@@ -32,19 +32,49 @@ CREATE TABLE Arrival_Times(
   FOREIGN KEY(Stop_ID) References Stop(Stop_ID)
 );
 
-INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 07:30:00', 101);
+
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 07:15:00', 101);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 07:30:00', 102);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 07:45:00', 103);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 08:00:00', 104);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 08:15:00', 105);
 INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 08:30:00', 101);
-INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 09:30:00', 101);
-INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 10:30:00', 101);
-INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 11:30:00', 101);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 08:45:00', 102);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 09:00:00', 103);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 09:15:00', 104);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 09:30:00', 105);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 09:45:00', 101);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 10:00:00', 102);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 10:15:00', 103);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 10:30:00', 104);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 10:45:00', 105);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 11:00:00', 101);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 11:15:00', 102);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 11:30:00', 103);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 11:45:00', 104);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 12:00:00', 105);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 12:15:00', 101);
 INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 12:30:00', 102);
-INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 13:30:00', 102);
-INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 14:30:00', 102);
-INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 15:30:00', 102);
-INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 16:30:00', 102);
-INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 17:30:00', 102);
-INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 18:30:00', 102);
-insert into Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-16 07:30:00', 101);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 12:45:00', 103);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 13:00:00', 104);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 14:15:00', 105);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 14:30:00', 101);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 14:45:00', 102);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 15:00:00', 103);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 15:15:00', 104);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 15:30:00', 105);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 15:45:00', 101);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 16:00:00', 102);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 16:15:00', 103);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 16:30:00', 104);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 16:45:00', 105);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 17:00:00', 101);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 17:15:00', 102);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 17:30:00', 103);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 17:45:00', 104);
+INSERT INTO Arrival_Times (Arrival_Time, Stop_ID) VALUES ('2017-02-15 18:00:00', 105);
+
+
 
 
 

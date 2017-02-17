@@ -188,6 +188,12 @@ public class Timetable extends JFrame {
 		});
 
 		JButton btnUpdateRoutes = new JButton("Update Routes");
+		btnUpdateRoutes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ParseForm parser = new ParseForm();
+				parser.setVisible(true);
+			}
+		});
 
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.TRAILING)

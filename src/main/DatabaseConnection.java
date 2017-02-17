@@ -54,7 +54,7 @@ public class DatabaseConnection {
 	}
 	
 	public ResultSet getPopRoutes(String location, String hour, boolean departing) {
-		String query = "select distinct * from Arrival_Times natural join Stop natural join Route where (Stop_Name = ?)";
+		String query = "select distinct * from Arrival_Times natural join Stop natural join Route natural join Popular where (Stop_Name = ?)";
 		if (departing) {
 			query += " AND ARRIVAL_TIME >= ? order by Arrival_time";
 		} else {

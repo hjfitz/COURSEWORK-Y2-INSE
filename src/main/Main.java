@@ -28,14 +28,13 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 
 @SuppressWarnings("serial")
 public class Main extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtTime;
-	private JTable table;
-	private JTable table_1;
 	private JLabel lbl_estimate;
 	private JToggleButton btn_font;
 	private JTextArea txtHints;
@@ -57,6 +56,23 @@ public class Main extends JFrame {
 				}
 			}
 		});
+	}
+	
+	private void getOrderedPopularRoutes(JTextPane popPane) {
+		DatabaseConnection dbConn = new DatabaseConnection();
+		dbConn.connect();
+		String query = "SELECT Route_Name FROM Popular NATURAL JOIN Route ORDER BY Route_Count";
+		ResultSet popRoutes = dbConn.runQuery(query);
+		String orderRoutes = "";
+		try {
+			while (popRoutes.next()) {
+				String routeName = popRoutes.getString("Route_Name");
+				orderRoutes += routeName + "\n";
+			}
+		} catch (SQLException sE) {
+			sE.printStackTrace();
+		}
+		popPane.setText(orderRoutes);
 	}
 
 	/**
@@ -181,8 +197,13 @@ public class Main extends JFrame {
 		         ResultSet popRoutes = conn.getPopRoutes(from,hour,departing);
 		         System.out.println("Stop IDs");
 		         try {
+		        	 //only runs if there's data returned, therefore no validation is requried.
 		        	 while (popRoutes.next()) {
-		        		 System.out.println(popRoutes.getInt("Stop_ID"));
+		        		 int curID = popRoutes.getInt("Route_ID");
+		        		 int hitCount = popRoutes.getInt("Route_Count");
+		        		 int newHits = hitCount + 1;
+		        		 String query = "update Popular set Route_Count=" + newHits + " where Route_ID=" + curID;
+		        		 conn.runInsert(query);		        		 
 		        	 }
 		         } catch (SQLException e3) {
 		        	 e3.printStackTrace();
@@ -320,5 +341,11 @@ public class Main extends JFrame {
 		});
 		btnViewTimetables.setBounds(620, 40, 155, 23);
 		panel.add(btnViewTimetables);
+		
+		JTextPane txtpnPopRoutes = new JTextPane();
+		txtpnPopRoutes.setBounds(32, 445, 741, 138);
+		panel.add(txtpnPopRoutes);
+		
+		getOrderedPopularRoutes(txtpnPopRoutes);
 	}
 }

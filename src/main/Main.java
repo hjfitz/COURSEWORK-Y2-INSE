@@ -264,7 +264,7 @@ public class Main extends JFrame {
 			        	
 			        	
 
-			        	DefaultTableModel model = new DefaultTableModel(new String[]{"Depart at", "Arrive at", "From", "To", "Travel time"}, 0);
+			        	DefaultTableModel model = new DefaultTableModel(new String[]{"Depart at", "Arrive at", "From", "To", "Travel time", "Estimated Price"}, 0);
 		        		
 			        	
 			        		for(int i = 0; i < toStop.size(); i++){
@@ -272,12 +272,15 @@ public class Main extends JFrame {
 			        			//System.out.println(toStop.get(i).getTime() + toStop.get(i).getBusName());
 
 			        			String travel = fromStop.get(i).calculateTravelTime(toStop.get(i).getTime());
+			        			
+			        			
 
-			        		
-
-			        		model.addRow(new Object[]{fromStop.get(i).getTime(), toStop.get(i).getTime(), fromStop.get(i).getBusName(),toStop.get(i).getBusName(), travel});
+			        			String price = fromStop.get(i).calculateCost(toStop.get(i).getTime());
+			        			if (! travel.equals("past")) {
+			        		model.addRow(new Object[]{fromStop.get(i).getTime(), toStop.get(i).getTime(), fromStop.get(i).getBusName(),toStop.get(i).getBusName(), travel, price});
 
 			        		table_2.setModel(model);
+			        			}
 			        		}
 
 

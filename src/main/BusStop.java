@@ -54,10 +54,38 @@ public class BusStop {
 		} else {
 			unit = "minutes";
 		}
+		if (travelTime <= 0) {
+			return "past";
+		} else {
 
-		String calculatedTime = Float.toString(travelTime) + " " + unit;
+			String calculatedTime = Float.toString(travelTime) + " " + unit;
 
-		return calculatedTime;
+			return calculatedTime;
+		}
+	}
+	
+	public String calculateCost(String btime) {
+		String[] fromStop = time.split(":");
+		String[] toStop = btime.split(":");
+
+		int fromhour = Integer.parseInt(fromStop[0]);
+		int fromminute = Integer.parseInt(fromStop[1]);
+		int fromsecond = Integer.parseInt(fromStop[2]);
+
+		int tempfrom;
+		tempfrom = convertToSeconds(fromsecond, fromminute, fromhour);
+
+		int tohour = Integer.parseInt(toStop[0]);
+		int tominute = Integer.parseInt(toStop[1]);
+		int tosecond = Integer.parseInt(toStop[2]);
+
+		int tempto;
+		tempto = convertToSeconds(tosecond, tominute, tohour);
+
+		travelTime = (tempto - tempfrom) / 60;
+		float travelCost = (float) (0.6 * travelTime);
+
+		return Float.toString(travelCost) + "p";
 	}
 
 	public int convertToSeconds(int seconds, int minutes, int hours) {

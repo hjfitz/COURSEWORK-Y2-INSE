@@ -299,7 +299,6 @@ public class Timetable extends JFrame {
 
 		table = new JTable();
 		scrollPane.setViewportView(table);
-
 		table.setModel(ourTable);
 		panel.setLayout(gl_panel);
 		getRoutes(cmbStops);
@@ -443,6 +442,7 @@ public class Timetable extends JFrame {
 		thisStop = stop;
 
 	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void getRoutes(JComboBox box) {
 		String query = "Select distinct * from Route";

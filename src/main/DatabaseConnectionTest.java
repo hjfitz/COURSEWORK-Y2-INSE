@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import com.mysql.jdbc.Connection;
+
 public class DatabaseConnectionTest {
 	
 	DatabaseConnection db = new DatabaseConnection();
@@ -18,15 +20,17 @@ public class DatabaseConnectionTest {
 	@Test
 	public void Connect() {
 		db.connect();
-		assertEquals(false, db); // fails required a method to return if there is a connection
+		assertNotEquals(null, db); // should not be null
+		assertEquals(false,db.isClosed()); // should pass, as the connection is opened
+		assertNotEquals(true,db.isClosed()); // should pass, as the connection is opened
 	}
 
 	@Test
 	public void CloseConnection() {
 		db.connect();
-		assertNotEquals(false, db); // fails required a method to return if there is a connection
+		assertEquals(false, db.isClosed()); // connection should be still open before closing
 		db.closeConnection();
-		assertEquals(true, db); // fails required a method to return if there is a connection
+		assertEquals(true, db.isClosed()); // connection should now be closed
 	
 	}
 
@@ -70,12 +74,12 @@ public class DatabaseConnectionTest {
 	public void GetSpecificRoute() {
 		db.connect();
 		ArrayList<String>result = new ArrayList<String>();
+		ArrayList<String>result1 = new ArrayList<String>();
 		ResultSet test = db.getSpecificRoute("Locks Way Road", "12:30", true);
 		try {
 			while(test.next()){
 				String time = test.getTime("Arrival_Time").toString();
-				String stopName = test.getString("Stop_Name");
-				
+				String stopName = test.getString("Stop_Name");	
 				result.add(time + " " + stopName);
 			}
 		} catch (SQLException e) {
@@ -86,7 +90,26 @@ public class DatabaseConnectionTest {
 		assertEquals("14:30:00 Locks Way Road",result.get(0));
 		assertEquals("15:45:00 Locks Way Road",result.get(1));
 		assertEquals("17:00:00 Locks Way Road",result.get(2));
+		
+		ResultSet test1 = db.getSpecificRoute("Locks Way Road", "11:00", false);
+		try {
+			while(test1.next()){
+				String time1 = test1.getTime("Arrival_Time").toString();
+				String stopName1 = test1.getString("Stop_Name");
+				result1.add(time1 + " " + stopName1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		assertEquals("07:15:00 Locks Way Road",result1.get(0));
+		assertEquals("08:30:00 Locks Way Road",result1.get(1));
+		assertEquals("09:45:00 Locks Way Road",result1.get(2));
+		assertEquals("11:00:00 Locks Way Road",result1.get(3));
 	
+		
 	}
 	
 	@Test

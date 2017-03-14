@@ -41,17 +41,15 @@ public class BusStopTest {
 
 	@Test
 	public void CalculateTravelTime() {
-		stop.setTime("07:15");
-		stop.calculateTravelTime("08:00");
-		assertEquals(45.0, stop.calculateTravelTime("08:00")); // after setting arrival time at 08:00 
+		stop.setTime("07:15:00");
+		assertEquals(45.0 + " minutes", stop.calculateTravelTime("08:00:00")); // after setting arrival time at 08:00 
 																		// the travel time should be 45 minutes // fails
 	}
 
 	@Test
 	public void CalculateCost() {
-		stop.setTime("07:15");
-		stop.calculateCost("08:00");
-		assertEquals(stop.calculateCost("08:00"), 0.6 * 45); // fails
+		stop.setTime("07:15:00");
+		assertEquals(stop.calculateCost("08:00:00"), (0.6 * 45) + "p"); // fails
 	}
 
 	@Test

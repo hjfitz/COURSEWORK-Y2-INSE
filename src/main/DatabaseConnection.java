@@ -17,6 +17,7 @@ public class DatabaseConnection {
 		try {
 			connection = DriverManager.getConnection(host, user, password);
 			System.out.println("Successfully connected to database.");
+			System.out.println(connection);
 		} catch (SQLException err) {
 			System.out.println(err.getMessage());
 		}
@@ -88,7 +89,9 @@ public class DatabaseConnection {
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setString(1, location);
 			statement.setString(2, "2017-02-15 " + hour);
-		if (departing)	statement.setString(3, "2017-02-15 19:00:00");
+			if(departing){
+				statement.setString(3, "2017-02-15 19:00:00");
+			}
 			System.out.println(statement);
 			ResultSet rs = statement.executeQuery();
 			return rs;
@@ -96,6 +99,16 @@ public class DatabaseConnection {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public boolean isClosed(){
+		try {
+			return connection.isClosed();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

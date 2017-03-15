@@ -91,4 +91,5 @@ public class BusStop {
 	public int convertToSeconds(int seconds, int minutes, int hours) {
 		return seconds + (60 * minutes) + (3600 * hours);
 	}
+	
 }

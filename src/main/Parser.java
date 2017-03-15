@@ -110,9 +110,10 @@ public class Parser {
 	 *            arguments and strings "empty" for the other arguments
 	 * 
 	 */
-	private static void createQuery(String table, String row, String value) {
+	public static void createQuery(String table, String row, String value) {
 		createQuery(table, row, value, "empty", "empty");
 	}
+	
 
 	/**
 	 * 
@@ -132,7 +133,7 @@ public class Parser {
 	 *            created a query with one or two rows
 	 * 
 	 */
-	private static void createQuery(String table, String row1, String value1, String row2, String value2) {
+	public static void createQuery(String table, String row1, String value1, String row2, String value2) {
 		String qryStart = "INSERT INTO " + table + " (" + row1;
 		String qryValues = ") VALUES (" + value1;
 		String qryEnd = ");";
@@ -144,5 +145,15 @@ public class Parser {
 		System.out.println(query);
 		insQueries.add(query);
 	}
+	
+	@SuppressWarnings("static-access")
+	public ArrayList<String> getQueries() {
+		return this.insQueries;
+	}
+	
+	public static void clearQueries() {
+		Parser.insQueries = new ArrayList<String>();
+	}
 
+	
 }

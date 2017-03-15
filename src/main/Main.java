@@ -58,23 +58,6 @@ public class Main extends JFrame {
 		});
 	}
 
-	private void getOrderedPopularRoutes(JTextPane popPane) {
-		DatabaseConnection dbConn = new DatabaseConnection();
-		dbConn.connect();
-		String query = "SELECT Route_Name FROM Popular NATURAL JOIN Route ORDER BY Route_Count";
-		ResultSet popRoutes = dbConn.runQuery(query);
-		String orderRoutes = "";
-		try {
-			while (popRoutes.next()) {
-				String routeName = popRoutes.getString("Route_Name");
-				orderRoutes += routeName + "\n";
-			}
-		} catch (SQLException sE) {
-			sE.printStackTrace();
-		}
-		popPane.setText(orderRoutes);
-	}
-
 	/**
 	 * Create the frame.
 	 */
@@ -100,7 +83,6 @@ public class Main extends JFrame {
 			}
 		});
 		btn_font.setBounds(620, 11, 155, 23);
-		// contentPane.add(btn_font);
 
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 6, 785, 717);
@@ -113,17 +95,30 @@ public class Main extends JFrame {
 		panel.add(lblSearchForA);
 
 		JComboBox comboBox = new JComboBox();
-
 		comboBox.setToolTipText("test");
-		comboBox.setModel(new DefaultComboBoxModel(new String[] { "Locks Way Road", "Lidl", "Fratton Station",
-				"Cambridge Road", "Winston Churchill Ave" }));
+		comboBox.setModel(new DefaultComboBoxModel(
+				new String[] {
+					"Locks Way Road",
+					"Lidl",
+					"Fratton Station",
+					"Cambridge Road",
+					"Winston Churchill Ave"
+				})
+			);
 
 		comboBox.setBounds(264, 71, 241, 27);
 		panel.add(comboBox);
 
 		JComboBox combo_Arrive = new JComboBox();
-		combo_Arrive.setModel(new DefaultComboBoxModel(new String[] { "Locks Way Road", "Lidl", "Fratton Station",
-				"Cambridge Road", "Winston Churchill Ave" }));
+		combo_Arrive.setModel(new DefaultComboBoxModel(
+				new String[] { 
+					"Locks Way Road",
+					"Lidl",
+					"Fratton Station",
+					"Cambridge Road",
+					"Winston Churchill Ave"
+					})
+				);
 		combo_Arrive.setBounds(264, 138, 241, 27);
 		panel.add(combo_Arrive);
 
@@ -173,14 +168,16 @@ public class Main extends JFrame {
 			}
 		});
 		btn_Search.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
+				conn.connect();
 				String from = comboBox.getSelectedItem().toString();
 				String to = combo_Arrive.getSelectedItem().toString();
 				String hour = txtTime.getText();
-				Boolean departing = comboBox_2.getSelectedItem().toString() == "Depart";
+				@SuppressWarnings("unused")
 				String route = "";
+				Boolean departing = (comboBox_2.getSelectedItem().toString() == "Depart");
 				search(from, to, hour, departing, table_2);
+
 			}
 		});
 
@@ -195,24 +192,13 @@ public class Main extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				JComponent elementList[] = { lbl_estimate, lblHints, lblSearchForA, lblTo, comboBox, lblArriveAt,
 						combo_Arrive, comboBox_2, txtTime, btn_Search, lblMostPopularRoutes };
+				Boolean enlargeFont = btn_font.isSelected();
+				changeFontSize(enlargeFont, elementList);
 
-				if (btn_font.isSelected()) {
-					for (JComponent element : elementList) {
-						element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() + 5));
-					}
-				}
-
-				else {
-					for (JComponent element : elementList) {
-						element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() - 5));
-					}
-				}
 			}
 		});
-
-		// btn_font.setBounds(631, 592, 144, 23);
+		
 		panel.add(btn_font);
-
 		lbl_estimate = new JLabel("Estimated Time until next bus: ");
 		lbl_estimate.setBounds(107, 381, 586, 25);
 		panel.add(lbl_estimate);
@@ -241,8 +227,7 @@ public class Main extends JFrame {
 		getOrderedPopularRoutes(txtpnPopRoutes);
 	}
 	
-	public void search(String from, String to, String hour, Boolean departing, JTable ourTable)
-	{
+	public void search(String from, String to, String hour, Boolean departing, JTable ourTable) {
 		DatabaseConnection conn = new DatabaseConnection();
 		conn.connect();
 		ArrayList<BusStop> fromStop = new ArrayList<BusStop>();
@@ -253,80 +238,107 @@ public class Main extends JFrame {
 		try {
 			// only runs if there's data returned, therefore no
 			// validation is requried.
-			while (popRoutes.next()) 
-			  {
+			while (popRoutes.next()) {
 				int curID = popRoutes.getInt("Route_ID");
 				int hitCount = popRoutes.getInt("Route_Count");
 				int newHits = hitCount + 1;
 				String query = "update Popular set Route_Count=" + newHits + " where Route_ID=" + curID;
 				conn.runInsert(query);
-			  }
+			}
 		} catch (SQLException e3) {
 			e3.printStackTrace();
 		}
 		System.out.println("end of stop ids");
 		ResultSet rs2;
-		String time = "";
+		String time;
 		try {
-			while (rs1.next()) 
-			  {
+			while (rs1.next()) {
 				time = rs1.getTime("Arrival_Time").toString();
 				String stopName = rs1.getString("Stop_Name");
 				fromStop.add(new BusStop(stopName, time));
-			  }
+			}
 			if (departing) {
 				rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
-				// String arriveTime =
-				// tFormat.format(fromStop.get(0).getTime());
-				// Time ct = tFormat.parse(currentTime);
 				DateFormat formatter = new SimpleDateFormat("hh:mm");
 				java.util.Date currentTime = new java.util.Date();
 				java.util.Date arriveTime = formatter.parse(fromStop.get(0).getTime());
 				System.err.println(currentTime);
 				System.err.println(arriveTime);
 				long timeDiff = currentTime.getTime() - arriveTime.getTime();
-				String estimate = (timeDiff / 3600000) + " hours and " + (timeDiff % 3600000) / 60000
-						+ " minutes";
+				String estimate = (timeDiff / 3600000) + " hours and "
+				                + (timeDiff % 3600000) / 60000 + " minutes";
 				lbl_estimate.setText(lbl_estimate.getText() + estimate);
+
 			} else {
 				rs2 = conn.getSpecificRoute(to, hour, departing);
 			}
-			while (rs2.next()) 
-			  {
+			while (rs2.next()) {
 				time = rs2.getTime("Arrival_Time").toString();
 				String stopName = rs2.getString("Stop_Name");
 				toStop.add(new BusStop(stopName, time));
-			  }
+			}
 			DefaultTableModel model = new DefaultTableModel(
 					new String[] { 
 							"Depart at",
 							"Arrive at",
-							"From", "To",
+							"From",
+							"To",
 							"Travel time",
 							"Estimated Price"
-						},
+							},
 					0);
-			for (int i = 0; i < toStop.size(); i++) 
-			  {
+			for (int i = 0; i < toStop.size(); i++) {
 				String travel = fromStop.get(i).calculateTravelTime(toStop.get(i).getTime());
 				String price = fromStop.get(i).calculateCost(toStop.get(i).getTime());
 				if (!travel.equals("past")) {
-					model.addRow(new Object[] { 
-						fromStop.get(i).getTime(), 
-						toStop.get(i).getTime(),	
-						fromStop.get(i).getBusName(), 
-						toStop.get(i).getBusName(), 
-						travel, 
-						price 
-					});
+					model.addRow(
+						new Object[] {
+							fromStop.get(i).getTime(),
+							toStop.get(i).getTime(),
+							fromStop.get(i).getBusName(),
+							toStop.get(i).getBusName(),
+							travel,
+							price
+							}
+						);
 					ourTable.setModel(model);
 				}
-			  }
+			}
+
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}
 		conn.closeConnection();
+	}
+
+	public void getOrderedPopularRoutes(JTextPane popPane) {
+		DatabaseConnection dbConn = new DatabaseConnection();
+		dbConn.connect();
+		String query = "SELECT Route_Name FROM Popular NATURAL JOIN Route ORDER BY Route_Count";
+		ResultSet popRoutes = dbConn.runQuery(query);
+		String orderRoutes = "";
+		try {
+			while (popRoutes.next()) {
+				String routeName = popRoutes.getString("Route_Name");
+				orderRoutes += routeName + "\n";
+			}
+		} catch (SQLException sE) {
+			sE.printStackTrace();
+		}
+		popPane.setText(orderRoutes);
+	}
+
+	public void changeFontSize(Boolean enlarge, JComponent[] elementList) {
+		if (btn_font.isSelected()) {
+		  for (JComponent element : elementList) {
+			element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() + 5));
+		  }
+		} else {
+		  for (JComponent element : elementList) {
+			element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() - 5));
+		  }
+		}
 	}
 }

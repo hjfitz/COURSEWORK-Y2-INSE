@@ -209,7 +209,11 @@ public class Timetable extends JFrame {
 		JButton btnViewForSpecific = new JButton("View for specific week");
 		btnViewForSpecific.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				getWeek(txtWeek.getText(), ourTable);
+				try {
+					getWeek(txtWeek.getText(), ourTable);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -318,7 +322,7 @@ public class Timetable extends JFrame {
 
 	}
 
-	private static String parseDate(String date) throws ParseException {
+	public static String parseDate(String date) throws ParseException {
 		SimpleDateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date parsedDate = iso8601.parse(date);
 		iso8601.applyPattern("EEE dd-MMM");
@@ -336,7 +340,7 @@ public class Timetable extends JFrame {
 	 */
 	@SuppressWarnings("unused")
 	public static void getTimes(String constraints, DefaultTableModel routeTable) {
-		routeTable.setRowCount(1);
+		routeTable.setRowCount(0);
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
 		String qryGetRouteNums = qryGetRouteNumsStart + thisStop;
@@ -467,17 +471,12 @@ public class Timetable extends JFrame {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private static void getWeek(String weekStart, DefaultTableModel routeTable) {
-		routeTable.setRowCount(1);
+	public static void getWeek(String weekStart, DefaultTableModel routeTable) throws ParseException {
+		routeTable.setRowCount(0);
 		String weekFormat = "yyyy-MM-dd";
 		SimpleDateFormat df = new SimpleDateFormat(weekFormat);
 		java.util.Date date = new java.util.Date();
-		try {
-			date = df.parse(weekStart);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		date = df.parse(weekStart);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.DATE, 7);

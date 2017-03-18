@@ -1,34 +1,33 @@
 package main;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import javax.swing.JTextPane;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JComboBox;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Font;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 public class Timetable extends JFrame {
@@ -210,7 +209,11 @@ public class Timetable extends JFrame {
 		JButton btnViewForSpecific = new JButton("View for specific week");
 		btnViewForSpecific.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				getWeek(txtWeek.getText(), ourTable);
+				try {
+					getWeek(txtWeek.getText(), ourTable);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -319,7 +322,7 @@ public class Timetable extends JFrame {
 
 	}
 
-	private static String parseDate(String date) throws ParseException {
+	public static String parseDate(String date) throws ParseException {
 		SimpleDateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date parsedDate = iso8601.parse(date);
 		iso8601.applyPattern("EEE dd-MMM");
@@ -337,18 +340,14 @@ public class Timetable extends JFrame {
 	 */
 	@SuppressWarnings("unused")
 	public static void getTimes(String constraints, DefaultTableModel routeTable) {
-		routeTable.setRowCount(1);
+		routeTable.setRowCount(0);
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
-		String qryGetRouteNums = qryGetRouteNumsStart + thisStop;// +
-																	// qryGetRouteNumsEnd
-																	// + curDate
-																	// + "'";
+		String qryGetRouteNums = qryGetRouteNumsStart + thisStop;
 		ResultSet routeNumbers = dbConn.runQuery(qryGetRouteNums);
 		String newTextField = "";
 		String date = "";
 		try {
-
 			while (routeNumbers.next()) {
 				String routeTimes = "";
 				String[] routeInfo = new String[2];
@@ -374,17 +373,9 @@ public class Timetable extends JFrame {
 					routeInfo[1] = out;
 					routeTable.addRow(routeInfo);
 					routeInfo[0] = "";
-					// newTextField += times.getDate("Arrival_Time").toString()
-					// + " " + times.getTime("Arrival_Time").toString() + "\t";
-					// newTextField += " " +
-					// times.getTime("Arrival_Time").toString() + "\t";
-
 				}
-				// routeInfo[1] = routeTimes;
 				newTextField += "\n\n\n";
-				// routeTable.addRow(routeInfo);
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -394,7 +385,7 @@ public class Timetable extends JFrame {
 	@SuppressWarnings("unused")
 	//TODO make this fucker work
 	public static void getByRoute(String routeName, DefaultTableModel routeTable) {
-		routeTable.setRowCount(1);
+		routeTable.setRowCount(0);
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
 		String query = "SELECT distinct Stop_Name, Arrival_Time from Arrival_Stop natural join Arrival_Times natural join Stop natual join Route where Route_Name = '" + routeName + "'";
@@ -402,7 +393,6 @@ public class Timetable extends JFrame {
 		String newTextField = "";
 		String date = "";
 		try {
-			
 			while (arrivalTimes.next()) {
 				String stopInfo[] = new String[2];
 				stopInfo[0] = arrivalTimes.getString("Stop_Name");
@@ -411,11 +401,9 @@ public class Timetable extends JFrame {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-				
 				stopInfo[1] = date + " " + arrivalTimes.getTime("Arrival_Time").toString();
 				routeTable.addRow(stopInfo);
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -457,7 +445,6 @@ public class Timetable extends JFrame {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -484,17 +471,12 @@ public class Timetable extends JFrame {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private static void getWeek(String weekStart, DefaultTableModel routeTable) {
-		routeTable.setRowCount(1);
+	public static void getWeek(String weekStart, DefaultTableModel routeTable) throws ParseException {
+		routeTable.setRowCount(0);
 		String weekFormat = "yyyy-MM-dd";
 		SimpleDateFormat df = new SimpleDateFormat(weekFormat);
 		java.util.Date date = new java.util.Date();
-		try {
-			date = df.parse(weekStart);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		date = df.parse(weekStart);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.DATE, 7);

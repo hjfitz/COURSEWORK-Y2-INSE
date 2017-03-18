@@ -16,8 +16,8 @@ public class DatabaseConnection {
 	public void connect() {
 		try {
 			connection = DriverManager.getConnection(host, user, password);
-			System.out.println("Successfully connected to database.");
-			System.out.println(connection);
+//			System.out.println("Successfully connected to database.");
+//			System.out.println(connection);
 		} catch (SQLException err) {
 			System.out.println(err.getMessage());
 		}
@@ -32,7 +32,7 @@ public class DatabaseConnection {
 	}
 
 	public ResultSet runQuery(String qry) {
-		System.out.println("Attempting to run query: " + qry + "\n\n");
+//		System.out.println("Attempting to run query: " + qry + "\n\n");
 		try {
 			PreparedStatement statement = connection.prepareStatement(qry);
 			ResultSet rs = statement.executeQuery();
@@ -44,7 +44,7 @@ public class DatabaseConnection {
 	}
 
 	public void runInsert(String qry) {
-		System.out.println("Attempting to update database with: " + qry + "\n\n");
+//		System.out.println("Attempting to update database with: " + qry + "\n\n");
 		try {
 			PreparedStatement stmnt = connection.prepareStatement(qry);
 			@SuppressWarnings("unused")
@@ -63,11 +63,11 @@ public class DatabaseConnection {
 		}
 		// create the java statement
 		try {
-			System.out.println(query);
+//			System.out.println(query);
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setString(1, location);
 			statement.setString(2, "2017-02-15 " + hour);
-			System.out.println(statement);
+//			System.out.println(statement);
 			ResultSet rs = statement.executeQuery();
 			return rs;
 		} catch (SQLException e) {
@@ -85,14 +85,14 @@ public class DatabaseConnection {
 		}
 		// create the java statement
 		try {
-			System.out.println(query);
+//			System.out.println(query);
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setString(1, location);
 			statement.setString(2, "2017-02-15 " + hour);
 			if(departing){
 				statement.setString(3, "2017-02-15 19:00:00");
 			}
-			System.out.println(statement);
+//			System.out.println(statement);
 			ResultSet rs = statement.executeQuery();
 			return rs;
 		} catch (SQLException e) {

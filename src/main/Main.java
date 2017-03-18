@@ -331,7 +331,7 @@ public class Main extends JFrame {
 	}
 
 	public void changeFontSize(Boolean enlarge, JComponent[] elementList) {
-		if (btn_font.isSelected()) {
+		if (enlarge) {
 		  for (JComponent element : elementList) {
 			element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() + 5));
 		  }

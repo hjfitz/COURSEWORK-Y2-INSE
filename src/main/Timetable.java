@@ -385,7 +385,7 @@ public class Timetable extends JFrame {
 	@SuppressWarnings("unused")
 	//TODO make this fucker work
 	public static void getByRoute(String routeName, DefaultTableModel routeTable) {
-		routeTable.setRowCount(1);
+		routeTable.setRowCount(0);
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
 		String query = "SELECT distinct Stop_Name, Arrival_Time from Arrival_Stop natural join Arrival_Times natural join Stop natual join Route where Route_Name = '" + routeName + "'";

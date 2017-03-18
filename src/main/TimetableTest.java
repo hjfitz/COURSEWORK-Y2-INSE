@@ -83,6 +83,17 @@ public class TimetableTest {
 		testTimetable.changeRouteNo(testCmbRoutes);
 		assertNotSame("101", testTimetable.thisStop);
 	}
+	
+	@Test
+	public void testGetWeek() {
+		int initialLength = testTableModel.getRowCount();
+		try {
+			testTimetable.getWeek("2017-03-09", testTableModel);
+			assertNotSame(initialLength, testTableModel);
+		} catch (ParseException e) {
+			fail(e.getMessage());
+		}
+	}
 
 	@Test
 	public void testGetWeekTwoYears() {
@@ -113,15 +124,17 @@ public class TimetableTest {
 	
 	@Test
 	public void testGetWeekIncorrectParse() {
+		boolean passes = false;
 		int initialLength = testTableModel.getRowCount();
 		try {
 			testTimetable.getWeek("31st jan", testTableModel);
 		} catch (ParseException e) {
-			fail(e.getMessage());
+			assertSame("a", "a");
+			passes = true;
 		}
-		assertSame(initialLength, testTableModel.getRowCount());
-		//Because we know that there will be no records in the database, we can assume that there are no rows.
-		assertSame(0, testTableModel.getRowCount());
+		if (!passes) {
+			fail();
+		}
 	}
 	
 	@Test
@@ -133,8 +146,6 @@ public class TimetableTest {
 			fail(e.getMessage());
 		}
 		assertSame(initialLength, testTableModel.getRowCount());
-		//Because we know that there will be no records in the database, we can assume that there are no rows.
-		assertSame(0, testTableModel.getRowCount());
 	}
 
 	@Test

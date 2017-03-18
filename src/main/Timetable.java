@@ -1,34 +1,33 @@
 package main;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import javax.swing.JTextPane;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JComboBox;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Font;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 public class Timetable extends JFrame {
@@ -340,15 +339,11 @@ public class Timetable extends JFrame {
 		routeTable.setRowCount(1);
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
-		String qryGetRouteNums = qryGetRouteNumsStart + thisStop;// +
-																	// qryGetRouteNumsEnd
-																	// + curDate
-																	// + "'";
+		String qryGetRouteNums = qryGetRouteNumsStart + thisStop;
 		ResultSet routeNumbers = dbConn.runQuery(qryGetRouteNums);
 		String newTextField = "";
 		String date = "";
 		try {
-
 			while (routeNumbers.next()) {
 				String routeTimes = "";
 				String[] routeInfo = new String[2];
@@ -374,17 +369,9 @@ public class Timetable extends JFrame {
 					routeInfo[1] = out;
 					routeTable.addRow(routeInfo);
 					routeInfo[0] = "";
-					// newTextField += times.getDate("Arrival_Time").toString()
-					// + " " + times.getTime("Arrival_Time").toString() + "\t";
-					// newTextField += " " +
-					// times.getTime("Arrival_Time").toString() + "\t";
-
 				}
-				// routeInfo[1] = routeTimes;
 				newTextField += "\n\n\n";
-				// routeTable.addRow(routeInfo);
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -402,7 +389,6 @@ public class Timetable extends JFrame {
 		String newTextField = "";
 		String date = "";
 		try {
-			
 			while (arrivalTimes.next()) {
 				String stopInfo[] = new String[2];
 				stopInfo[0] = arrivalTimes.getString("Stop_Name");
@@ -411,11 +397,9 @@ public class Timetable extends JFrame {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-				
 				stopInfo[1] = date + " " + arrivalTimes.getTime("Arrival_Time").toString();
 				routeTable.addRow(stopInfo);
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -457,7 +441,6 @@ public class Timetable extends JFrame {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

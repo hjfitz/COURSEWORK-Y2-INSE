@@ -139,13 +139,18 @@ public class TimetableTest {
 	
 	@Test
 	public void testGetWeekNonExistantDate() {
+		boolean passes = false;
 		int initialLength = testTableModel.getRowCount();
 		try {
 			testTimetable.getWeek("2017-02-30", testTableModel);
 		} catch (ParseException e) {
-			fail(e.getMessage());
+			passes = true;
+			assertSame(initialLength, testTableModel.getRowCount());
 		}
-		assertSame(initialLength, testTableModel.getRowCount());
+		if (!passes) {
+			fail();
+		}
+		
 	}
 
 	@Test

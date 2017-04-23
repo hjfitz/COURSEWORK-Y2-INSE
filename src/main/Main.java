@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -20,27 +24,29 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import java.awt.Color;
 
 @SuppressWarnings("serial")
 public class Main extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txtTime;
+	private JTextField txtHour;
 	private JLabel lbl_estimate;
 	private JToggleButton btn_font;
 	private JTextArea txtHints;
 	private JTable table_2;
-	private JTextField textField;
+	private JTextField txtMinute;
+	
 
 	/**
 	 * Launch the application.
@@ -51,6 +57,7 @@ public class Main extends JFrame {
 			@Override
 			public void run() {
 				try {
+					
 					Main frame = new Main();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -97,13 +104,14 @@ public class Main extends JFrame {
 
 		JLabel lblSearchForA = new JLabel("Search for a specific route");
 		lblSearchForA.setForeground(new Color(0, 0, 128));
-		lblSearchForA.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-		lblSearchForA.setBounds(100, 6, 295, 25);
+		lblSearchForA.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
+		lblSearchForA.setBounds(224, 4, 329, 25);
 		panel.add(lblSearchForA);
 
 		JComboBox comboBox = new JComboBox();
+		comboBox.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		comboBox.setForeground(new Color(0, 0, 128));
-		comboBox.setToolTipText("test");
+		comboBox.setToolTipText("");
 		comboBox.setModel(new DefaultComboBoxModel(
 				new String[] {
 					"Locks Way Road",
@@ -114,10 +122,12 @@ public class Main extends JFrame {
 				})
 			);
 
-		comboBox.setBounds(264, 71, 241, 27);
+		comboBox.setBounds(251, 71, 282, 47);
+		
 		panel.add(comboBox);
 
 		JComboBox combo_Arrive = new JComboBox();
+		combo_Arrive.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		combo_Arrive.setForeground(new Color(0, 0, 128));
 		combo_Arrive.setModel(new DefaultComboBoxModel(
 				new String[] { 
@@ -128,27 +138,35 @@ public class Main extends JFrame {
 					"Winston Churchill Ave"
 					})
 				);
-		combo_Arrive.setBounds(264, 138, 241, 27);
+		combo_Arrive.setSelectedIndex(2);
+		combo_Arrive.setBounds(251, 130, 282, 37);
 		panel.add(combo_Arrive);
+		
+
+		
+		
+
 
 		JLabel lblTo = new JLabel("Depart from");
 		lblTo.setForeground(new Color(0, 0, 128));
-		lblTo.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblTo.setBounds(264, 53, 108, 16);
+		lblTo.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblTo.setBounds(258, 60, 108, 16);
 		panel.add(lblTo);
 
 		JComboBox comboBox_2 = new JComboBox();
+		comboBox_2.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
 		comboBox_2.setForeground(new Color(0, 0, 128));
 		comboBox_2.setBackground(new Color(255, 255, 255));
 		comboBox_2.setModel(new DefaultComboBoxModel(new String[] { "Arrive", "Depart" }));
-		comboBox_2.setBounds(264, 176, 78, 27);
+		comboBox_2.setSelectedIndex(1);
+		comboBox_2.setBounds(331, 168, 108, 25);
 		panel.add(comboBox_2);
 
 		JLabel lblMostPopularRoutes = new JLabel("Most popular routes");
 		lblMostPopularRoutes.setForeground(new Color(0, 0, 128));
 		lblMostPopularRoutes.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblMostPopularRoutes.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMostPopularRoutes.setBounds(10, 417, 765, 16);
+		lblMostPopularRoutes.setBounds(10, 468, 765, 16);
 
 		panel.add(lblMostPopularRoutes);
 
@@ -157,27 +175,35 @@ public class Main extends JFrame {
 		panel.add(txtHints);
 		txtHints.setText("Welcome to FlashClould! Tap [Search] to display all buses coming here next.");
 
-		txtTime = new JTextField();
-		txtTime.addMouseListener(new MouseAdapter() {
+		txtHour = new JTextField();
+		txtHour.setName("hour");
+		txtHour.setHorizontalAlignment(SwingConstants.CENTER);
+		txtHour.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+		txtHour.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				txtHints.setText("Enter the time you want to arrive / depart at");
 			}
 		});
-		java.util.Date currentTime = new java.util.Date();
+		Date date = new Date();   // given date
+		Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+		calendar.setTime(date);   // assigns calendar to given date 
+		 // gets hour in 24h format
 		DateFormat formatter = new SimpleDateFormat("hh:mm");
-		txtTime.setText("02");
-		txtTime.setBounds(352, 176, 29, 26);
-		panel.add(txtTime);
-		txtTime.setColumns(10);
+		txtHour.setText(Integer.toString(calendar.get(Calendar.HOUR_OF_DAY)));
+		txtHour.setBounds(278, 200, 71, 53);
+		panel.add(txtHour);
+		txtHour.setColumns(2);
+		
 
 		JLabel lblArriveAt = new JLabel("Arrive at\n");
 		lblArriveAt.setForeground(new Color(0, 0, 128));
-		lblArriveAt.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblArriveAt.setBounds(264, 119, 60, 16);
+		lblArriveAt.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblArriveAt.setBounds(261, 117, 88, 16);
 		panel.add(lblArriveAt);
 
 		JButton btn_Search = new JButton("Search");
+		btn_Search.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		btn_Search.setForeground(new Color(0, 0, 128));
 		btn_Search.setBackground(new Color(100, 149, 237));
 		btn_Search.addMouseListener(new MouseAdapter() {
@@ -191,7 +217,8 @@ public class Main extends JFrame {
 				conn.connect();
 				String from = comboBox.getSelectedItem().toString();
 				String to = combo_Arrive.getSelectedItem().toString();
-				String hour = txtTime.getText();
+				int fixedHour = Integer.parseInt(txtHour.getText()) - 1;
+				String hour = fixedHour + ":" + txtMinute.getText();
 				@SuppressWarnings("unused")
 				String route = "";
 				Boolean departing = (comboBox_2.getSelectedItem().toString() == "Depart");
@@ -200,7 +227,7 @@ public class Main extends JFrame {
 			}
 		});
 
-		btn_Search.setBounds(422, 176, 83, 25);
+		btn_Search.setBounds(300, 265, 164, 37);
 		panel.add(btn_Search);
 
 		JLabel lblHints = new JLabel("Hints");
@@ -211,7 +238,7 @@ public class Main extends JFrame {
 		btn_font.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JComponent elementList[] = { lbl_estimate, lblHints, lblSearchForA, lblTo, comboBox, lblArriveAt,
-						combo_Arrive, comboBox_2, txtTime, btn_Search, lblMostPopularRoutes };
+						combo_Arrive, comboBox_2, txtHour, btn_Search, lblMostPopularRoutes };
 				Boolean enlargeFont = btn_font.isSelected();
 				changeFontSize(enlargeFont, elementList);
 
@@ -221,14 +248,16 @@ public class Main extends JFrame {
 		panel.add(btn_font);
 		lbl_estimate = new JLabel("Estimated Time until next bus: ");
 		lbl_estimate.setForeground(new Color(0, 0, 128));
-		lbl_estimate.setBounds(100, 381, 586, 25);
+		lbl_estimate.setBounds(38, 463, 586, 25);
 		panel.add(lbl_estimate);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(102, 208, 619, 162);
+		scrollPane.setBounds(10, 314, 765, 113);
 		panel.add(scrollPane);
 
 		table_2 = new JTable();
+		table_2.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+	
 		scrollPane.setViewportView(table_2);
 
 		JButton btnViewTimetables = new JButton("View timetables");
@@ -244,21 +273,89 @@ public class Main extends JFrame {
 		panel.add(btnViewTimetables);
 
 		JTextPane txtpnPopRoutes = new JTextPane();
-		txtpnPopRoutes.setBounds(32, 445, 741, 138);
+		txtpnPopRoutes.setBounds(10, 486, 765, 103);
 		panel.add(txtpnPopRoutes);
 
 		getOrderedPopularRoutes(txtpnPopRoutes);
 		
-		textField = new JTextField();
-		textField.setText("55");
-		textField.setColumns(10);
-		textField.setBounds(391, 176, 29, 26);
-		panel.add(textField);
+		txtMinute = new JTextField();
+		txtMinute.setName("minute");
+		txtMinute.setHorizontalAlignment(SwingConstants.CENTER);
+		txtMinute.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+		String minute = Integer.toString(calendar.get(Calendar.MINUTE));
+		if(Integer.parseInt(minute) < 10){
+			minute = "0" + minute;
+		}
+		txtMinute.setText(minute);
+		txtMinute.setColumns(2);
+		txtMinute.setBounds(423, 200, 71, 53);
+		panel.add(txtMinute);
 		
 		JLabel label = new JLabel(":");
-		label.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		label.setBounds(380, 169, 12, 37);
+		label.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		label.setBounds(382, 209, 12, 37);
 		panel.add(label);
+		
+		
+		
+		
+		comboBox.addActionListener(new ActionListener(){
+
+			
+			public void actionPerformed(ActionEvent e) {
+				disableSearch(comboBox, combo_Arrive, btn_Search);
+			}
+			
+		});
+		
+		combo_Arrive.addActionListener(new ActionListener(){
+
+			
+			public void actionPerformed(ActionEvent e) {
+				disableSearch(comboBox, combo_Arrive, btn_Search);
+			}	
+			
+		});
+		
+		
+		txtHour.getDocument().addDocumentListener(new DocumentListener(){
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+					validInput(txtHour, btn_Search);
+			}
+
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				validInput(txtHour, btn_Search);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+			
+		});
+		
+		txtMinute.getDocument().addDocumentListener(new DocumentListener(){
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+					validInput(txtMinute, btn_Search);
+			}
+
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				validInput(txtMinute, btn_Search);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+			
+		});
+
 	}
 	
 	public void search(String from, String to, String hour, Boolean departing, JTable ourTable) {
@@ -324,11 +421,13 @@ public class Main extends JFrame {
 			for (int i = 0; i < toStop.size(); i++) {
 				String travel = fromStop.get(i).calculateTravelTime(toStop.get(i).getTime());
 				String price = fromStop.get(i).calculateCost(toStop.get(i).getTime());
+				String[] timeFrom = fromStop.get(i).getTime().split(":");
+				String[] timeTo = toStop.get(i).getTime().split(":");
 				if (!travel.equals("past")) {
 					model.addRow(
 						new Object[] {
-							fromStop.get(i).getTime(),
-							toStop.get(i).getTime(),
+							timeFrom[0] + ":" + timeFrom[1],
+							timeTo[0] + ":" + timeTo[1],
 							fromStop.get(i).getBusName(),
 							toStop.get(i).getBusName(),
 							travel,
@@ -375,4 +474,51 @@ public class Main extends JFrame {
 		  }
 		}
 	}
+	
+	public void disableSearch(JComboBox<String> comboBox, JComboBox<String> combo_Arrive, JButton btn_Search){
+		String from = comboBox.getSelectedItem().toString();
+		String to = combo_Arrive.getSelectedItem().toString();
+		if(from.equals(to)){
+			btn_Search.setEnabled(false);
+		}else{
+			btn_Search.setEnabled(true);
+		}
+	}
+	
+	
+	public void validInput(JTextField txt,JButton btn_Search){
+		
+		if(txt.getText().isEmpty()){
+			btn_Search.setEnabled(false);
+		}else{
+			for(int i = 0; i < txt.getText().length(); i++){
+				Character c = txt.getText().charAt(i);
+				if(Character.isDigit(c)){
+					try {
+						int val = Integer.parseInt(txt.getText());
+						System.out.println(val);
+						if(txt.getName().equals("hour")){
+							if(val > 24){
+								btn_Search.setEnabled(false);
+							}
+							else{
+								btn_Search.setEnabled(true);
+							}
+						}
+						else if(txt.getName().equals("minute")){
+							if(val > 59){
+								btn_Search.setEnabled(false);
+							}
+							else{
+								btn_Search.setEnabled(true);
+							}
+						}
+					} catch (NumberFormatException e) {
+					
+					}
+				}
+			}
+		}
+	}
+				
 }

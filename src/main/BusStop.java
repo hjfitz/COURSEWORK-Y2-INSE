@@ -3,7 +3,7 @@ package main;
 public class BusStop {
 	private String busName;
 	private String time;
-	private float travelTime;
+	private int travelTime;
 
 	public BusStop(String busName, String time) {
 		this.setBusName(busName);
@@ -58,7 +58,7 @@ public class BusStop {
 			return "past";
 		} else {
 
-			String calculatedTime = Float.toString(travelTime) + " " + unit;
+			String calculatedTime = travelTime + " " + unit;
 
 			return calculatedTime;
 		}
@@ -83,9 +83,9 @@ public class BusStop {
 		tempto = convertToSeconds(tosecond, tominute, tohour);
 
 		travelTime = (tempto - tempfrom) / 60;
-		float travelCost = (float) (0.6 * travelTime);
+		int travelCost = (int) (0.6 * travelTime);
 
-		return Float.toString(travelCost) + "p";
+		return travelCost + "p";
 	}
 
 	public int convertToSeconds(int seconds, int minutes, int hours) {

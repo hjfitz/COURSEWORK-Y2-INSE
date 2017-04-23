@@ -46,6 +46,8 @@ public class Main extends JFrame {
 	private JTextArea txtHints;
 	private JTable table_2;
 	private JTextField txtMinute;
+	private JPanel panel_1;
+	private JLabel lblSorryNoRoutes;
 	
 
 	/**
@@ -103,9 +105,10 @@ public class Main extends JFrame {
 		panel.setLayout(null);
 
 		JLabel lblSearchForA = new JLabel("Search for a specific route");
+		lblSearchForA.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSearchForA.setForeground(new Color(0, 0, 128));
 		lblSearchForA.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
-		lblSearchForA.setBounds(224, 4, 329, 25);
+		lblSearchForA.setBounds(10, -11, 765, 55);
 		panel.add(lblSearchForA);
 
 		JComboBox comboBox = new JComboBox();
@@ -214,14 +217,23 @@ public class Main extends JFrame {
 		});
 		btn_Search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int fixedHour = 0;
+				int fixedMin = 0;
+				Boolean departing = (comboBox_2.getSelectedItem().toString() == "Depart");
 				conn.connect();
 				String from = comboBox.getSelectedItem().toString();
 				String to = combo_Arrive.getSelectedItem().toString();
-				int fixedHour = Integer.parseInt(txtHour.getText()) - 1;
-				String hour = fixedHour + ":" + txtMinute.getText();
+				if(departing){
+					fixedHour = Integer.parseInt(txtHour.getText()) - 1;
+					fixedMin = Integer.parseInt(txtMinute.getText());
+				}else{
+					fixedHour = Integer.parseInt(txtHour.getText());
+					fixedMin = Integer.parseInt(txtMinute.getText()) + 15 ;
+				}
+				String hour = fixedHour + ":" + fixedMin;
 				@SuppressWarnings("unused")
 				String route = "";
-				Boolean departing = (comboBox_2.getSelectedItem().toString() == "Depart");
+				
 				search(from, to, hour, departing, table_2);
 
 			}
@@ -250,15 +262,23 @@ public class Main extends JFrame {
 		lbl_estimate.setForeground(new Color(0, 0, 128));
 		lbl_estimate.setBounds(38, 463, 586, 25);
 		panel.add(lbl_estimate);
+		
+		panel_1 = new JPanel();
+		panel_1.setBounds(10, 314, 765, 113);
+		panel.add(panel_1);
+		panel_1.setLayout(null);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 314, 765, 113);
-		panel.add(scrollPane);
+		scrollPane.setBounds(0, 0, 765, 113);
+		panel_1.add(scrollPane);
 
 		table_2 = new JTable();
 		table_2.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 	
 		scrollPane.setViewportView(table_2);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		scrollPane.setColumnHeaderView(lblNewLabel);
 
 		JButton btnViewTimetables = new JButton("View timetables");
 		btnViewTimetables.setForeground(new Color(0, 0, 128));
@@ -295,6 +315,12 @@ public class Main extends JFrame {
 		label.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		label.setBounds(382, 209, 12, 37);
 		panel.add(label);
+		
+		lblSorryNoRoutes = new JLabel("Sorry, no routes have been found");
+		lblSorryNoRoutes.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSorryNoRoutes.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
+		lblSorryNoRoutes.setBounds(10, 349, 765, 37);
+		panel.add(lblSorryNoRoutes);
 		
 		
 		
@@ -388,7 +414,7 @@ public class Main extends JFrame {
 				String stopName = rs1.getString("Stop_Name");
 				fromStop.add(new BusStop(stopName, time));
 			}
-			if (departing) {
+			if (departing && !fromStop.isEmpty()) {
 				rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
 				DateFormat formatter = new SimpleDateFormat("hh:mm");
 				java.util.Date currentTime = new java.util.Date();
@@ -402,6 +428,16 @@ public class Main extends JFrame {
 
 			} else {
 				rs2 = conn.getSpecificRoute(to, hour, departing);
+				
+			}
+			
+			if(fromStop.isEmpty()){
+				panel_1.setVisible(false);
+				lblSorryNoRoutes.setVisible(true);
+			}
+			else{
+				panel_1.setVisible(true);
+				lblSorryNoRoutes.setVisible(false);
 			}
 			while (rs2.next()) {
 				time = rs2.getTime("Arrival_Time").toString();
@@ -487,38 +523,35 @@ public class Main extends JFrame {
 	
 	
 	public void validInput(JTextField txt,JButton btn_Search){
-		
-		if(txt.getText().isEmpty()){
+		String text = txt.getText();
+		if(text.isEmpty()){
 			btn_Search.setEnabled(false);
-		}else{
-			for(int i = 0; i < txt.getText().length(); i++){
-				Character c = txt.getText().charAt(i);
-				if(Character.isDigit(c)){
-					try {
-						int val = Integer.parseInt(txt.getText());
-						System.out.println(val);
-						if(txt.getName().equals("hour")){
-							if(val > 24){
-								btn_Search.setEnabled(false);
-							}
-							else{
-								btn_Search.setEnabled(true);
-							}
-						}
-						else if(txt.getName().equals("minute")){
-							if(val > 59){
-								btn_Search.setEnabled(false);
-							}
-							else{
-								btn_Search.setEnabled(true);
-							}
-						}
-					} catch (NumberFormatException e) {
-					
+		}
+		else {
+	
+			try {
+				int val = Integer.parseInt(text);
+				if(txt.getName().equals("hour")){
+					if(val > 24){
+						btn_Search.setEnabled(false);
+					}else{
+						btn_Search.setEnabled(true);
 					}
 				}
+				else if(txt.getName().equals("minute")){
+					if(val > 59){
+						btn_Search.setEnabled(false);
+					}
+					else{
+						btn_Search.setEnabled(true);
+					}
+				}
+	
+			} catch (NumberFormatException e) {
+				btn_Search.setEnabled(false);
 			}
 		}
 	}
-				
+	
+	
 }

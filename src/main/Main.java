@@ -54,20 +54,17 @@ public class Main extends JFrame {
 	private JPanel panel_1;
 	private JLabel lblSorryNoRoutes;
 	private String currentTime;
-	private String estimateVal;
 	private SimpleDateFormat format;
-	
 
 	/**
-	 * Launch the application.
+	 * Launch the application. Run with the class
+	 * Attempts to a new Main object called 'frame' and calls the method .setVisible
 	 */
-
-	public static void main(String[] args) {
+	public static void main(String args[]) {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					
 					Main frame = new Main();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -79,12 +76,17 @@ public class Main extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * The vast majority of the code in this constructor is used for creating components in the field 
+	 * or adding event listeners.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Main() {
 		currentTime = "";
-		estimateVal = "";
+		
+		//create a simple data format for universal use
 		format = new SimpleDateFormat("HH:mm:ss");
+		
+		//connect to the database to fill the items on the field
 		DatabaseConnection conn = new DatabaseConnection();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 821, 772);
@@ -126,40 +128,21 @@ public class Main extends JFrame {
 		comboBox.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		comboBox.setForeground(new Color(0, 0, 128));
 		comboBox.setToolTipText("");
-		comboBox.setModel(new DefaultComboBoxModel(
-				new String[] {
-					"Locks Way Road",
-					"Lidl",
-					"Fratton Station",
-					"Cambridge Road",
-					"Winston Churchill Ave"
-				})
-			);
+		comboBox.setModel(new DefaultComboBoxModel(new String[] { "Locks Way Road", "Lidl", "Fratton Station",
+				"Cambridge Road", "Winston Churchill Ave" }));
 
 		comboBox.setBounds(251, 71, 282, 47);
-		
+
 		panel.add(comboBox);
 
 		JComboBox combo_Arrive = new JComboBox();
 		combo_Arrive.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		combo_Arrive.setForeground(new Color(0, 0, 128));
-		combo_Arrive.setModel(new DefaultComboBoxModel(
-				new String[] { 
-					"Locks Way Road",
-					"Lidl",
-					"Fratton Station",
-					"Cambridge Road",
-					"Winston Churchill Ave"
-					})
-				);
+		combo_Arrive.setModel(new DefaultComboBoxModel(new String[] { "Locks Way Road", "Lidl", "Fratton Station",
+				"Cambridge Road", "Winston Churchill Ave" }));
 		combo_Arrive.setSelectedIndex(2);
 		combo_Arrive.setBounds(251, 130, 282, 37);
 		panel.add(combo_Arrive);
-		
-
-		
-		
-
 
 		JLabel lblTo = new JLabel("Depart from");
 		lblTo.setForeground(new Color(0, 0, 128));
@@ -201,16 +184,17 @@ public class Main extends JFrame {
 				txtHints.setText("Enter the time you want to arrive / depart at");
 			}
 		});
-		Date date = new Date();   // given date
-		Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-		calendar.setTime(date);   // assigns calendar to given date 
-		 // gets hour in 24h format
+		Date date = new Date(); // given date
+		Calendar calendar = GregorianCalendar.getInstance(); // creates a new
+																// calendar
+																// instance
+		calendar.setTime(date); // assigns calendar to given date
+		// gets hour in 24h format
 		DateFormat formatter = new SimpleDateFormat("hh:mm");
 		txtHour.setText(Integer.toString(calendar.get(Calendar.HOUR_OF_DAY)));
 		txtHour.setBounds(278, 200, 71, 53);
 		panel.add(txtHour);
 		txtHour.setColumns(2);
-		
 
 		JLabel lblArriveAt = new JLabel("Arrive at\n");
 		lblArriveAt.setForeground(new Color(0, 0, 128));
@@ -232,21 +216,30 @@ public class Main extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int fixedHour = 0;
 				int fixedMin = 0;
+				
+				//find out as to whether we're departing or not.
 				Boolean departing = (comboBox_2.getSelectedItem().toString() == "Depart");
+				
+				//open the connection to the database
 				conn.connect();
+				
+				//get information for the departing and arriving stops from the form
 				String from = comboBox.getSelectedItem().toString();
 				String to = combo_Arrive.getSelectedItem().toString();
-				if(departing){
+				
+				//format the hours and minutes depending on whether we're departing or not
+				if (departing) {
 					fixedHour = Integer.parseInt(txtHour.getText()) - 1;
 					fixedMin = Integer.parseInt(txtMinute.getText());
-				}else{
+				} else {
 					fixedHour = Integer.parseInt(txtHour.getText());
-					fixedMin = Integer.parseInt(txtMinute.getText()) + 15 ;
+					fixedMin = Integer.parseInt(txtMinute.getText()) + 15;
 				}
-				String hour = fixedHour + ":" + fixedMin;
-				@SuppressWarnings("unused")
-				String route = "";
 				
+				//set up the time, for use in search
+				String hour = fixedHour + ":" + fixedMin;
+
+				//call search with the main jTable, for the results.
 				search(from, to, hour, departing, table_2);
 
 			}
@@ -260,16 +253,36 @@ public class Main extends JFrame {
 		lblHints.setBounds(10, 610, 46, 14);
 		panel.add(lblHints);
 
+		/**
+		 * if the button 'change font' is clicked, create a list of elements 
+		 * and call changeFontSize()
+		 */
 		btn_font.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JComponent elementList[] = { lbl_estimate, lblHints, lblSearchForA, lblTo, comboBox, lblArriveAt,
-						combo_Arrive, comboBox_2, txtHour, btn_Search, lblMostPopularRoutes };
+				//create a list of elements which need their font sizes changed
+				JComponent elementList[] = { 
+						lbl_estimate,
+						lblHints,
+						lblSearchForA, 
+						lblTo,
+						comboBox, 
+						lblArriveAt,
+						combo_Arrive,
+						comboBox_2,
+						txtHour, 
+						btn_Search, 
+						lblMostPopularRoutes
+						};
+				
+				//find out if the user requires the font to be enlarged or not.
 				Boolean enlargeFont = btn_font.isSelected();
+				
+				//change the font size
 				changeFontSize(enlargeFont, elementList);
 
 			}
 		});
-		
+
 		panel.add(btn_font);
 		lbl_estimate = new JLabel("Estimated Time until next bus: ");
 		lbl_estimate.setHorizontalAlignment(SwingConstants.CENTER);
@@ -277,7 +290,7 @@ public class Main extends JFrame {
 		lbl_estimate.setForeground(new Color(0, 0, 128));
 		lbl_estimate.setBounds(10, 432, 745, 25);
 		panel.add(lbl_estimate);
-		
+
 		panel_1 = new JPanel();
 		panel_1.setBounds(10, 314, 765, 113);
 		panel.add(panel_1);
@@ -289,11 +302,9 @@ public class Main extends JFrame {
 
 		table_2 = new JTable();
 		table_2.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-		
-		
-	
+
 		scrollPane.setViewportView(table_2);
-		
+
 		JLabel lblNewLabel = new JLabel("New label");
 		scrollPane.setColumnHeaderView(lblNewLabel);
 
@@ -314,62 +325,62 @@ public class Main extends JFrame {
 		panel.add(txtpnPopRoutes);
 
 		getOrderedPopularRoutes(txtpnPopRoutes);
-		
+
 		txtMinute = new JTextField();
 		txtMinute.setName("minute");
 		txtMinute.setHorizontalAlignment(SwingConstants.CENTER);
 		txtMinute.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		String minute = Integer.toString(calendar.get(Calendar.MINUTE));
-		if(Integer.parseInt(minute) < 10){
+		if (Integer.parseInt(minute) < 10) {
 			minute = "0" + minute;
 		}
 		txtMinute.setText(minute);
 		txtMinute.setColumns(2);
 		txtMinute.setBounds(423, 200, 71, 53);
 		panel.add(txtMinute);
-		
+
 		currentTime += txtHour.getText() + ":" + txtMinute.getText() + ":" + "00";
-		
+
 		JLabel label = new JLabel(":");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		label.setBounds(382, 209, 12, 37);
 		panel.add(label);
-		
+
 		lblSorryNoRoutes = new JLabel("Sorry, no routes have been found");
 		lblSorryNoRoutes.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSorryNoRoutes.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
 		lblSorryNoRoutes.setBounds(10, 349, 765, 37);
 		panel.add(lblSorryNoRoutes);
-		
-		
-		
-		
-		comboBox.addActionListener(new ActionListener(){
 
-			
+		
+		/**
+		 * add event listeners to both combo boxes, to ensure that we don't search from and to on the same list.
+		 */
+		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				disableSearch(comboBox, combo_Arrive, btn_Search);
 			}
-			
 		});
-		
-		combo_Arrive.addActionListener(new ActionListener(){
 
-			
+		/**
+		 * add event listeners to both combo boxes, to ensure that we don't search from and to on the same list.
+		 */
+		combo_Arrive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				disableSearch(comboBox, combo_Arrive, btn_Search);
-			}	
-			
+			}
+
 		});
-		
-		
-		txtHour.getDocument().addDocumentListener(new DocumentListener(){
+
+		/**
+		 * Add event listener to text box, listener whenever something happens, check if the input is valid.
+		 */
+		txtHour.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-					validInput(txtHour, btn_Search);
+				validInput(txtHour, btn_Search);
 			}
-
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
@@ -379,16 +390,19 @@ public class Main extends JFrame {
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 			}
-			
+
 		});
-		
-		txtMinute.getDocument().addDocumentListener(new DocumentListener(){
+
+
+		/**
+		 * Add event listener to text box, listener whenever something happens, check if the input is valid.
+		 */
+		txtMinute.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-					validInput(txtMinute, btn_Search);
+				validInput(txtMinute, btn_Search);
 			}
-
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
@@ -398,110 +412,174 @@ public class Main extends JFrame {
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 			}
-			
+
 		});
 
 	}
+
 	
+	/**
+	 * Searches for all of the bus times, given the time, where we want to depart from, and where we want to go to
+	 * @param from The stop that we're leaving from 
+	 * @param to Where we wish to go to
+	 * @param hour The time that we should search 
+	 * @param departing if we're departing or not 
+	 * @param ourTable the table on the form that we want to update
+	 * This method firstly creates a connection to the database that we're using.
+	 * then it queries the database using the method 'getSpecificRoute()', which returns route information.
+	 * given that route information, table 'Popular' is updated, with its hit count increased.
+	 * The method then iterates over the result set and adds the information to an arraylist of BusTimes
+	 * We use the getSpecificRoute() method from DatabaseConnection to find all of the times for the destination
+	 * A new defaulttablemodel is created, and the information that's parsed (to look better and more informative)
+	 * The model of the parameter ourTable is then set to that table.
+	 * 
+	 */
 	public void search(String from, String to, String hour, Boolean departing, JTable ourTable) {
+		
+		//create a new database connection and connect
 		DatabaseConnection conn = new DatabaseConnection();
 		conn.connect();
+		
+		// create lists to store the returned busses from the select queries.
+		// these are used later on to populate a new DefaultTableModel which 'ourTable' will be set to
 		ArrayList<BusStop> fromStop = new ArrayList<BusStop>();
 		ArrayList<BusStop> toStop = new ArrayList<BusStop>();
+		
+		// perform a search for a specific route, and popular router given the parameters
 		ResultSet rs1 = conn.getSpecificRoute(from, hour, departing);
 		ResultSet popRoutes = conn.getPopRoutes(from, hour, departing);
-		System.out.println("Stop IDs");
+
+		// try to loop through popular routes and update the hits
+		// this chunk of code uses the same routes that our search query may return.
+		// because these route IDs are returned, and possibly returned often - they may be of use to some users
+		// therefore, there is a table for them, with a 'count' of how often they are searched.
+		// this try-catch chunk of code updates the routes (increasing their hit count) returned in the search
 		try {
-			// only runs if there's data returned, therefore no
-			// validation is requried.
 			while (popRoutes.next()) {
+				// get attributes for a future insert query
 				int curID = popRoutes.getInt("Route_ID");
 				int hitCount = popRoutes.getInt("Route_Count");
+				
+				//increase the hit count
 				int newHits = hitCount + 1;
+				
+				//create a new query and run it. No need for sanitization because there should be no user input.
 				String query = "update Popular set Route_Count=" + newHits + " where Route_ID=" + curID;
 				conn.runInsert(query);
 			}
 		} catch (SQLException e3) {
 			e3.printStackTrace();
 		}
-		System.out.println("end of stop ids");
+		
+		//Create rs2 outside of the try-while-if scope, for use later on
 		ResultSet rs2;
-		String time;
-		try {
-			while (rs1.next()) {
-				time = rs1.getTime("Arrival_Time").toString();
+		
+		try 
+		{
+			//loop over the result set and populate fromStop with new BusStop items
+			while (rs1.next()) 
+			{
+				//get the attributes from the query
+				String time     = rs1.getTime("Arrival_Time").toString();
 				String stopName = rs1.getString("Stop_Name");
+				
+				//make a new bus stop with the attributes gotten two lines ago
 				fromStop.add(new BusStop(stopName, time));
 			}
-			if (departing && !fromStop.isEmpty()) {
-				System.out.println("sds");
-				int i = 0;
-				rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
-				
-				
-				Date currentT = format.parse(currentTime);
-				Date arriveTime = format.parse(fromStop.get(i).getTime());
-				String diff = timeDifference(currentT,arriveTime);
-				lbl_estimate.setText(diff);
-				
-				
-			} else {
-				rs2 = conn.getSpecificRoute(to, hour, departing);
-				
-			}
 			
-			if(fromStop.isEmpty()){
+			// if we want to see which times are departing,
+			// and the stop we're leaving from isn't empty:
+			if (departing && !fromStop.isEmpty()) {
+				// query the database based on where we want to go, and the earliest time that's been returned.
+				rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
+
+				//format the times for the form
+				Date currentT   = format.parse(currentTime);
+				Date arriveTime = format.parse(fromStop.get(0)
+							                           .getTime());
+				
+				// get the time between the arrival and current time.
+				String diff = timeDifference(currentT, arriveTime);
+				lbl_estimate.setText(diff);
+			} else {
+				// query the database based on where we want to go, and the time passed.
+				rs2 = conn.getSpecificRoute(to, hour, departing);
+			}
+
+			
+			// if we can't find any stops, notify the user by hiding the panel of times
+			// and showing a label with 'no routes found'. else, hide that label and show the panel.
+			if (fromStop.isEmpty()) {
 				panel_1.setVisible(false);
 				lblSorryNoRoutes.setVisible(true);
-			}
-			else{
+			} else {
 				panel_1.setVisible(true);
 				lblSorryNoRoutes.setVisible(false);
 			}
-			while (rs2.next()) {
-				time = rs2.getTime("Arrival_Time").toString();
+			
+			
+			// like we did earlier, loop through the result set, creating busStop objects and adding them to an arraylist
+			while (rs2.next()) 
+			{
+				String time     = rs2.getTime("Arrival_Time").toString();
 				String stopName = rs2.getString("Stop_Name");
 				toStop.add(new BusStop(stopName, time));
 			}
+			
+			//create a new defaulttablemodel. This will be the new view for the jtable
 			DefaultTableModel model = new DefaultTableModel(
-					new String[] { 
+					new String[] {
 							"Depart at",
 							"Arrive at",
-							"From",
-							"To",
-							"Travel time",
-							"Estimated Price"
-							},
-					0);
-			for (int i = 0; i < toStop.size(); i++) {
-				String travel = fromStop.get(i).calculateTravelTime(toStop.get(i).getTime());
-				String price = fromStop.get(i).calculateCost(toStop.get(i).getTime());
-				String[] timeFrom = fromStop.get(i).getTime().split(":");
-				String[] timeTo = toStop.get(i).getTime().split(":");
+							"From", 
+							"To", 
+							"Travel time", 
+							"Estimated Price" 
+							}, 0);
+			
+			// loop through the returned bus times
+			for (int i = 0; i < toStop.size(); i++) 
+			{
+				// create a string travel, the total time between the item in fromStop and it's corresponding 
+				// entry in toStop
+				String travel = fromStop.get(i)
+										.calculateTravelTime(toStop.get(i)
+												                   .getTime()
+												                   );
+				//same as above, but we get the *cost*
+				String price = fromStop.get(i)
+									   .calculateCost(toStop.get(i)
+											                .getTime()
+											                );
+				
+				//split the times in to hours and minutes (by splitting by ':'
+				String[] timeFrom = fromStop.get(i)
+						                    .getTime()
+						                    .split(":");
+				
+				
+				String[] timeTo = toStop.get(i)
+						                .getTime()
+						                .split(":");
+				
+				
 				if (!travel.equals("past")) {
-					model.addRow(
-						new Object[] {
-							timeFrom[0] + ":" + timeFrom[1],
-							timeTo[0] + ":" + timeTo[1],
+					//add a new row to the table, which will soon be available on screen
+					model.addRow(new Object[] { 
+							timeFrom[0] + ":" + timeFrom[1], timeTo[0] + ":" + timeTo[1],
 							fromStop.get(i).getBusName(),
 							toStop.get(i).getBusName(),
 							travel,
-							price
-							}
-						);
+							price 
+							});
 					ourTable.setModel(model);
 				}
 			}
 
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		} catch (IndexOutOfBoundsException e1) {
+		// catch the many errors that we've encountered so many times.
+		} catch (SQLException  | ParseException | IndexOutOfBoundsException e1) {
 			e1.printStackTrace();
 		}
-		conn.closeConnection();
-		
 		
 		table_2.addMouseListener(new MouseAdapter(){
 			DefaultTableModel model = (DefaultTableModel) table_2.getModel();
@@ -523,104 +601,191 @@ public class Main extends JFrame {
 			
 			
 		});
-		
 	}
 
+	
+	/**
+	 * Gets the popular routes from the database, in order.
+	 * formats the names on new lines, and changes parameter text to these route names
+	 * @param popPane JTextPane to change the text of
+	 */
 	public void getOrderedPopularRoutes(JTextPane popPane) {
+		
+		//create a new database connection
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
+		
+		// design a query. Get the names of the routes, sorted by the most popular
+		// natural join popular and route to get the route name
 		String query = "SELECT Route_Name FROM Popular NATURAL JOIN Route ORDER BY Route_Count";
+		
+		//run the query and save in to popRoutes
 		ResultSet popRoutes = dbConn.runQuery(query);
+		
+		//initialise orderRoutes for use outside of scope
 		String orderRoutes = "";
 		try {
-			while (popRoutes.next()) {
+			// iterate through the result set, and set up orderRoutes 
+			// with the name of each route on each line.
+			while (popRoutes.next()) 
+			{
+				//get the name
 				String routeName = popRoutes.getString("Route_Name");
+				
+				//append the name to orderRoutes and add a newline
 				orderRoutes += routeName + "\n";
 			}
 		} catch (SQLException sE) {
 			sE.printStackTrace();
 		}
+		
+		//change the text of popPane (parameter) to the popular routes on new lines.
 		popPane.setText(orderRoutes);
 	}
 
+	/**
+	 * loops through a list of JComponents and changes their font to a larger or smaller one, depending on the parameter.
+	 * font is set to Arial +/- the current font size.
+	 * @param enlarge whether the font should be enlarged or made smaller
+	 * @param elementList a list of elements to change the font an font size
+	 */
 	public void changeFontSize(Boolean enlarge, JComponent[] elementList) {
 		if (enlarge) {
-		  for (JComponent element : elementList) {
-			element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() + 5));
-			btn_font.setText("Decrease Font Size");
-		  }
+			
+			for (JComponent element : elementList) 
+			{
+				//set font to Arial at a size bigger than the current size
+				element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() + 5));
+				
+				//change the context on the button on the form to something more suited.
+				btn_font.setText("Decrease Font Size");
+			}
 		} else {
-		  for (JComponent element : elementList) {
-			element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() - 5));
-			btn_font.setText("Increase Font Size");
-		  }
+			
+			for (JComponent element : elementList) 
+			{
+				//set font to Arial at size smaller than the current size
+				element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() - 5));
+				
+				//change the context on the button on the form to something more suited.
+				btn_font.setText("Increase Font Size");
+			}
 		}
 	}
+
 	
-	public void disableSearch(JComboBox<String> comboBox, JComboBox<String> combo_Arrive, JButton btn_Search){
-		String from = comboBox.getSelectedItem().toString();
-		String to = combo_Arrive.getSelectedItem().toString();
-		if(from.equals(to)){
+	/**
+	 * Given two items to search for, if they're the same then disable the search button.
+	 * @param comboBox the combo box that contains the departing route name
+	 * @param combo_Arrive the combo box that contains the arriving route name
+	 * @param btn_Search the button to press to invoke a search method
+	 */
+	public void disableSearch(JComboBox<String> comboBox, JComboBox<String> combo_Arrive, JButton btn_Search) {
+		
+		//get info from combo boxes
+		String from = comboBox.getSelectedItem()
+				              .toString();
+		
+		String to   = combo_Arrive.getSelectedItem()
+				                  .toString();
+		
+		//if the items in the combo box, disable the search button. otherwise enable it!
+		if (from.equals(to)) {
 			btn_Search.setEnabled(false);
-		}else{
+		} else {
 			btn_Search.setEnabled(true);
 		}
 	}
+
 	
-	
-	public void validInput(JTextField txt,JButton btn_Search){
+	/**
+	 * if the text field contains a value that is either an invalid minute or hour, disable the search button 
+	 * @param txt a text field to validate
+	 * @param btn_Search a button that is disabled if the txt is invalid.
+	 */
+	public void validInput(JTextField txt, JButton btn_Search) {
+		//get the text from the text field
 		String text = txt.getText();
-		if(text.isEmpty()){
+		
+		//set the button to disabled if the text field is empty
+		if (text.isEmpty()) {
 			btn_Search.setEnabled(false);
-		}
-		else {
-	
+		} else {
+
 			try {
+				//try to get an integer from the text field.
 				int val = Integer.parseInt(text);
-				if(txt.getName().equals("hour")){
-					if(val > 24){
+				
+				//if we've got an hour field, check properly
+				if (txt.getName().equals("hour")) {
+					
+					//if we've got an invalid hour, disable the button
+					if (val > 24 || val < 0) {
 						btn_Search.setEnabled(false);
-					}else{
+					} else {
+						btn_Search.setEnabled(true);
+					}
+					
+				//if we've got a minute field, check properly.
+				} else if (txt.getName().equals("minute")) {
+					
+					//if we've got an invalid minute, disable the button
+					if (val > 59 || val < 0) {
+						btn_Search.setEnabled(false);
+					} else {
 						btn_Search.setEnabled(true);
 					}
 				}
-				else if(txt.getName().equals("minute")){
-					if(val > 59){
-						btn_Search.setEnabled(false);
-					}
-					else{
-						btn_Search.setEnabled(true);
-					}
-				}
-	
+				//catch an error when trying to cast the text to an int.
+				//if we've got an error, there's an erroneous input and therefore the button should be disabled.
 			} catch (NumberFormatException e) {
 				btn_Search.setEnabled(false);
 			}
 		}
 	}
+
 	
-	
-	
-	public String timeDifference(Date time1, Date time2) throws ParseException{
+	/**
+	 * find the difference between the times as parameters
+	 * return a formatted a formatted string with relevant information 
+	 * if there's a difference in time, we show a label. else, it's hidden.
+	 * 
+	 * @param time1 the beginning time, departing time to be compared
+	 * @param time2 the beginning time, departing time to be compared
+	 * @return estimated time as formatted string for putting on label
+	 */
+	public String timeDifference(Date time1, Date time2) {
 		
+		//instantiate the return value
+		String estimateVal = "";
+		
+		//find difference in times, given as parameters
 		long timeDiff = time2.getTime() - time1.getTime();
+		
+		//find the time in hours
 		long estimateH = (timeDiff / 3600000);
-        long estimateM = (timeDiff % 3600000) / 60000;
-        System.out.println(estimateH);
-        System.out.println(estimateM);
-        
-        if(estimateM > 0){
-        	if(estimateH == 0){
-				estimateVal = ("Estimated Time until next bus: " + estimateM + " minutes");
-			}else{
-				estimateVal = ("Estimated Time until next bus: " + estimateH + " hours and " + estimateM + " minutes");
+		
+		//find the time in minutes
+		long estimateM = (timeDiff % 3600000) / 60000;
+
+		//if there is a difference in minutes (ie, the system finds different times), check if there's a difference in hours
+		if (estimateM > 0) {
+			
+			// set the variable to be returned  
+			estimateVal = "Estimated Time until next bus: " + estimateM + " minutes";
+			
+			// set the label that we're going to stick the returned string on to visible
+			lbl_estimate.setVisible(true);
+			
+			// if there's a difference in hours, change the return value
+			if (estimateH != 0) {
+				estimateVal = "Estimated Time until next bus: " + estimateH + " hours and " + estimateM + " minutes";
 			}
-        }
-        
-        if(estimateVal.length() > 0){
-        	lbl_estimate.setVisible(true);
-        }
-        
-        return estimateVal;
+		} else {
+			//if there's no difference in minutes, don't show any information
+			lbl_estimate.setVisible(false);
+		}
+
+		return estimateVal;
 	}
 }

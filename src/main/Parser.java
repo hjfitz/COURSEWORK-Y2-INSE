@@ -26,7 +26,7 @@ public class Parser {
 
 	/**
 	 * 
-	 * @param {filename}
+	 * @param filename
 	 *            The file to read the queries and change to INSERT queries *
 	 *            parseFile: Given a json file, this method creates insert
 	 *            queries for SQL It transfers in to query Stings, stored in a
@@ -117,20 +117,15 @@ public class Parser {
 
 	/**
 	 * 
-	 * @param table
-	 *            The table to insert to
-	 * @param row1
-	 *            The first row to insert to
-	 * @param value1
-	 *            The value for the first row in the table
-	 * @param row2
-	 *            The second row in the table to insert to
-	 * @param value2
-	 *            The value for the second row
+	 * @param table The table to insert to
+	 * @param row1 The first row to insert to
+	 * @param value1 The value for the first row in the table
+	 * @param row2 The second row in the table to insert to
+	 * @param value2 The value for the second row
 	 * 
-	 *            Takes the afformentioned parameters and transforms them in to
-	 *            an INSERT query Checks to see if the second row is empty and
-	 *            created a query with one or two rows
+	 * Takes the aforementioned parameters and transforms them in to
+	 * an INSERT query Checks to see if the second row is empty and
+	 * created a query with one or two rows
 	 * 
 	 */
 	public static void createQuery(String table, String row1, String value1, String row2, String value2) {

@@ -374,12 +374,20 @@ public class Main extends JFrame {
 
 	
 	/**
-	 * Searches for a bug
-	 * @param from
-	 * @param to
-	 * @param hour
-	 * @param departing
-	 * @param ourTable
+	 * Searches for all of the bus times, given the time, where we want to depart from, and where we want to go to
+	 * @param from The stop that we're leaving from 
+	 * @param to Where we wish to go to
+	 * @param hour The time that we should search 
+	 * @param departing if we're departing or not 
+	 * @param ourTable the table on the form that we want to update
+	 * This method firstly creates a connection to the database that we're using.
+	 * then it queries the database using the method 'getSpecificRoute()', which returns route information.
+	 * given that route information, table 'Popular' is updated, with its hit count increased.
+	 * The method then iterates over the result set and adds the information to an arraylist of BusTimes
+	 * We use the getSpecificRoute() method from DatabaseConnection to find all of the times for the destination
+	 * A new defaulttablemodel is created, and the information that's parsed (to look better and more informative)
+	 * The model of the parameter ourTable is then set to that table.
+	 * 
 	 */
 	public void search(String from, String to, String hour, Boolean departing, JTable ourTable) {
 		
@@ -437,19 +445,25 @@ public class Main extends JFrame {
 			// if we want to see which times are departing,
 			// and the stop we're leaving from isn't empty:
 			if (departing && !fromStop.isEmpty()) {
-				int i = 0;
+				// query the database based on where we want to go, and the earliest time that's been returned.
 				rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
 
-				Date currentT = format.parse(currentTime);
-				Date arriveTime = format.parse(fromStop.get(i).getTime());
+				//format the times for the form
+				Date currentT   = format.parse(currentTime);
+				Date arriveTime = format.parse(fromStop.get(0)
+							                           .getTime());
+				
+				// get the time between the arrival and current time.
 				String diff = timeDifference(currentT, arriveTime);
 				lbl_estimate.setText(diff);
-
 			} else {
+				// query the database based on where we want to go, and the time passed.
 				rs2 = conn.getSpecificRoute(to, hour, departing);
-
 			}
 
+			
+			// if we can't find any stops, notify the user by hiding the panel of times
+			// and showing a label with 'no routes found'. else, hide that label and show the panel.
 			if (fromStop.isEmpty()) {
 				panel_1.setVisible(false);
 				lblSorryNoRoutes.setVisible(true);
@@ -457,42 +471,73 @@ public class Main extends JFrame {
 				panel_1.setVisible(true);
 				lblSorryNoRoutes.setVisible(false);
 			}
-			while (rs2.next()) {
-				String time = rs2.getTime("Arrival_Time").toString();
+			
+			
+			// like we did earlier, loop through the result set, creating busStop objects and adding them to an arraylist
+			while (rs2.next()) 
+			{
+				String time     = rs2.getTime("Arrival_Time").toString();
 				String stopName = rs2.getString("Stop_Name");
 				toStop.add(new BusStop(stopName, time));
 			}
+			
+			//create a new defaulttablemodel. This will be the new view for the jtable
 			DefaultTableModel model = new DefaultTableModel(
-					new String[] { "Depart at", "Arrive at", "From", "To", "Travel time", "Estimated Price" }, 0);
-			for (int i = 0; i < toStop.size(); i++) {
-				String travel = fromStop.get(i).calculateTravelTime(toStop.get(i).getTime());
-				String price = fromStop.get(i).calculateCost(toStop.get(i).getTime());
-				String[] timeFrom = fromStop.get(i).getTime().split(":");
-				String[] timeTo = toStop.get(i).getTime().split(":");
+					new String[] {
+							"Depart at",
+							"Arrive at",
+							"From", 
+							"To", 
+							"Travel time", 
+							"Estimated Price" 
+							}, 0);
+			
+			// loop through the returned bus times
+			for (int i = 0; i < toStop.size(); i++) 
+			{
+				// create a string travel, the total time between the item in fromStop and it's corresponding 
+				// entry in toStop
+				String travel = fromStop.get(i)
+										.calculateTravelTime(toStop.get(i)
+												                   .getTime()
+												                   );
+				//same as above, but we get the *cost*
+				String price = fromStop.get(i)
+									   .calculateCost(toStop.get(i)
+											                .getTime()
+											                );
+				
+				//split the times in to hours and minutes (by splitting by ':'
+				String[] timeFrom = fromStop.get(i)
+						                    .getTime()
+						                    .split(":");
+				
+				
+				String[] timeTo = toStop.get(i)
+						                .getTime()
+						                .split(":");
+				
+				
 				if (!travel.equals("past")) {
-					model.addRow(new Object[] { timeFrom[0] + ":" + timeFrom[1], timeTo[0] + ":" + timeTo[1],
-							fromStop.get(i).getBusName(), toStop.get(i).getBusName(), travel, price });
+					//add a new row to the table, which will soon be available on screen
+					model.addRow(new Object[] { 
+							timeFrom[0] + ":" + timeFrom[1], timeTo[0] + ":" + timeTo[1],
+							fromStop.get(i).getBusName(),
+							toStop.get(i).getBusName(),
+							travel,
+							price 
+							});
 					ourTable.setModel(model);
 				}
 			}
 
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		} catch (IndexOutOfBoundsException e1) {
+		// catch the many errors that we've encountered so many times.
+		} catch (SQLException  | ParseException | IndexOutOfBoundsException e1) {
 			e1.printStackTrace();
 		}
+		
+		//close the database connection!
 		conn.closeConnection();
-
-		ListSelectionModel cellSelectionModel = table_2.getSelectionModel();
-		cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-
-			}
-		});
 	}
 
 	public void getOrderedPopularRoutes(JTextPane popPane) {

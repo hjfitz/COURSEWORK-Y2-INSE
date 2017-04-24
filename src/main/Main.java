@@ -23,6 +23,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -502,14 +503,27 @@ public class Main extends JFrame {
 		conn.closeConnection();
 		
 		
-		ListSelectionModel cellSelectionModel = table_2.getSelectionModel();
-		cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
-
+		table_2.addMouseListener(new MouseAdapter(){
+			DefaultTableModel model = (DefaultTableModel) table_2.getModel();
 			@Override
-			public void valueChanged(ListSelectionEvent e) {
+		    public void mouseClicked(MouseEvent e) {
+		        if (e.getClickCount() == 1) {
+		            final JTable target = (JTable)e.getSource();
+		            final int row = target.getSelectedRow();
+		            
+		            String[] item = model.getDataVector().elementAt(row).toString().split(",");
+		            String[] departTime = item[0].split("\\[");
+		            String routeInformation = "Depart from" + item[2] + " at " + departTime[1] ;
+		            routeInformation += " Arrive at" + item[3] + " at" + item[1];
+		            
+		            lbl_estimate.setText(routeInformation);
+		            lbl_estimate.setVisible(true);
+		        }
+		    }
 			
-			}
+			
 		});
+		
 	}
 
 	public void getOrderedPopularRoutes(JTextPane popPane) {

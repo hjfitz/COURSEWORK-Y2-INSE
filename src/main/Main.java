@@ -38,6 +38,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
 public class Main extends JFrame {
@@ -53,6 +54,7 @@ public class Main extends JFrame {
 	private JLabel lblSorryNoRoutes;
 	private String currentTime;
 	private String estimateVal;
+	private SimpleDateFormat format;
 	
 
 	/**
@@ -81,6 +83,7 @@ public class Main extends JFrame {
 	public Main() {
 		currentTime = "";
 		estimateVal = "";
+		format = new SimpleDateFormat("HH:mm:ss");
 		DatabaseConnection conn = new DatabaseConnection();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 821, 772);
@@ -118,6 +121,7 @@ public class Main extends JFrame {
 		panel.add(lblSearchForA);
 
 		JComboBox comboBox = new JComboBox();
+		comboBox.setBackground(Color.WHITE);
 		comboBox.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		comboBox.setForeground(new Color(0, 0, 128));
 		comboBox.setToolTipText("");
@@ -267,9 +271,10 @@ public class Main extends JFrame {
 		
 		panel.add(btn_font);
 		lbl_estimate = new JLabel("Estimated Time until next bus: ");
+		lbl_estimate.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_estimate.setVisible(false);
 		lbl_estimate.setForeground(new Color(0, 0, 128));
-		lbl_estimate.setBounds(10, 425, 586, 25);
+		lbl_estimate.setBounds(10, 432, 745, 25);
 		panel.add(lbl_estimate);
 		
 		panel_1 = new JPanel();
@@ -282,19 +287,9 @@ public class Main extends JFrame {
 		panel_1.add(scrollPane);
 
 		table_2 = new JTable();
-		table_2.setEnabled(false);
 		table_2.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		
-		ListSelectionModel cellSelectionModel = table_2.getSelectionModel();
-		cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
+		
 	
 		scrollPane.setViewportView(table_2);
 		
@@ -441,22 +436,12 @@ public class Main extends JFrame {
 				System.out.println("sds");
 				int i = 0;
 				rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
-				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+				
 				
 				Date currentT = format.parse(currentTime);
 				Date arriveTime = format.parse(fromStop.get(i).getTime());
 				String diff = timeDifference(currentT,arriveTime);
 				lbl_estimate.setText(diff);
-				
-					while(diff.length() == 0){
-						i++;
-						arriveTime = format.parse(fromStop.get(i).getTime());
-						diff = timeDifference(currentT,arriveTime);
-						lbl_estimate.setText(diff);
-					}
-				
-				
-				
 				
 				
 			} else {
@@ -515,6 +500,28 @@ public class Main extends JFrame {
 			e1.printStackTrace();
 		}
 		conn.closeConnection();
+		
+		
+		ListSelectionModel cellSelectionModel = table_2.getSelectionModel();
+		cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				
+				
+				try {
+					//Date time1 = format.parse(.getTime());
+					//Date time2 = format.parse(toStop.get(e.getLastIndex()).getTime());
+					lbl_estimate.setText(timeDifference(time1, time2));
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			}
+			
+		});
 	}
 
 	public void getOrderedPopularRoutes(JTextPane popPane) {

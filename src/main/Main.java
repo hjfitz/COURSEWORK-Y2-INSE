@@ -507,20 +507,8 @@ public class Main extends JFrame {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				
-				
-				try {
-					//Date time1 = format.parse(.getTime());
-					//Date time2 = format.parse(toStop.get(e.getLastIndex()).getTime());
-					lbl_estimate.setText(timeDifference(time1, time2));
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				
-			}
 			
+			}
 		});
 	}
 

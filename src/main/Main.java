@@ -3,6 +3,7 @@ package main;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -18,12 +19,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -31,15 +32,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
 public class Main extends JFrame {
@@ -55,6 +52,10 @@ public class Main extends JFrame {
 	private JLabel lblSorryNoRoutes;
 	private String currentTime;
 	private SimpleDateFormat format;
+	private ImageIcon tick = new ImageIcon("img/tick.png");
+	private ImageIcon cross = new ImageIcon("img/cross.png");
+	private JLabel label_1,label_2,label_3;
+	
 
 	/**
 	 * Launch the application. Run with the class
@@ -82,6 +83,11 @@ public class Main extends JFrame {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Main() {
 		currentTime = "";
+		
+		tick = scaleIcon(tick);
+		cross = scaleIcon(cross);
+		
+		
 		
 		//create a simple data format for universal use
 		format = new SimpleDateFormat("HH:mm:ss");
@@ -126,7 +132,7 @@ public class Main extends JFrame {
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBackground(Color.WHITE);
 		comboBox.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		comboBox.setForeground(new Color(0, 0, 128));
+		comboBox.setForeground(Color.BLACK);
 		comboBox.setToolTipText("");
 		comboBox.setModel(new DefaultComboBoxModel(new String[] { "Locks Way Road", "Lidl", "Fratton Station",
 				"Cambridge Road", "Winston Churchill Ave" }));
@@ -351,13 +357,37 @@ public class Main extends JFrame {
 		lblSorryNoRoutes.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
 		lblSorryNoRoutes.setBounds(10, 349, 765, 37);
 		panel.add(lblSorryNoRoutes);
-
+		
+		label_1 = new JLabel("");
+		label_1.setFont(new Font("Lucida Grande", Font.PLAIN, 5));
+		label_1.setHorizontalAlignment(SwingConstants.CENTER);
+		label_1.setBounds(545, 85, 16, 16);
+		panel.add(label_1);
+		
+		label_2 = new JLabel("");
+		label_2.setHorizontalAlignment(SwingConstants.CENTER);
+		label_2.setFont(new Font("Lucida Grande", Font.PLAIN, 5));
+		label_2.setBounds(545, 140, 16, 16);
+		panel.add(label_2);
+		
+		label_3 = new JLabel("");
+		label_3.setHorizontalAlignment(SwingConstants.CENTER);
+		label_3.setFont(new Font("Lucida Grande", Font.PLAIN, 5));
+		label_3.setBounds(506, 219, 16, 16);
+		panel.add(label_3);
+		
+		JLabel[] labels = new JLabel[3];
+		labels[0] = label_1;
+		labels[1] = label_2;
+		labels[2] = label_3;
 		
 		/**
 		 * add event listeners to both combo boxes, to ensure that we don't search from and to on the same list.
 		 */
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				label_1.setVisible(true);
+				label_2.setVisible(true);
 				disableSearch(comboBox, combo_Arrive, btn_Search);
 			}
 		});
@@ -367,6 +397,8 @@ public class Main extends JFrame {
 		 */
 		combo_Arrive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				label_1.setVisible(true);
+				label_2.setVisible(true);
 				disableSearch(comboBox, combo_Arrive, btn_Search);
 			}
 
@@ -414,6 +446,8 @@ public class Main extends JFrame {
 			}
 
 		});
+		
+		loadIcons(labels);
 
 	}
 
@@ -692,8 +726,18 @@ public class Main extends JFrame {
 		//if the items in the combo box, disable the search button. otherwise enable it!
 		if (from.equals(to)) {
 			btn_Search.setEnabled(false);
+			txtHour.setEnabled(false);
+			txtMinute.setEnabled(false);
+			label_1.setIcon(cross);
+			label_2.setIcon(cross);
+			
+			
 		} else {
 			btn_Search.setEnabled(true);
+			label_1.setIcon(tick);
+			label_2.setIcon(tick);
+			txtHour.setEnabled(true);
+			txtMinute.setEnabled(true);
 		}
 	}
 
@@ -706,12 +750,14 @@ public class Main extends JFrame {
 	public void validInput(JTextField txt, JButton btn_Search) {
 		//get the text from the text field
 		String text = txt.getText();
+		label_3.setVisible(true);
 		
 		//set the button to disabled if the text field is empty
 		if (text.isEmpty()) {
 			btn_Search.setEnabled(false);
+			label_3.setIcon(cross);
 		} else {
-
+			
 			try {
 				//try to get an integer from the text field.
 				int val = Integer.parseInt(text);
@@ -722,8 +768,10 @@ public class Main extends JFrame {
 					//if we've got an invalid hour, disable the button
 					if (val > 24 || val < 0) {
 						btn_Search.setEnabled(false);
+						label_3.setIcon(cross);
 					} else {
 						btn_Search.setEnabled(true);
+						label_3.setIcon(tick);
 					}
 					
 				//if we've got a minute field, check properly.
@@ -732,13 +780,16 @@ public class Main extends JFrame {
 					//if we've got an invalid minute, disable the button
 					if (val > 59 || val < 0) {
 						btn_Search.setEnabled(false);
+						label_3.setIcon(cross);
 					} else {
 						btn_Search.setEnabled(true);
+						label_3.setIcon(tick);
 					}
 				}
 				//catch an error when trying to cast the text to an int.
 				//if we've got an error, there's an erroneous input and therefore the button should be disabled.
 			} catch (NumberFormatException e) {
+				label_3.setIcon(cross);
 				btn_Search.setEnabled(false);
 			}
 		}
@@ -787,5 +838,20 @@ public class Main extends JFrame {
 		}
 
 		return estimateVal;
+	}
+	
+	public void loadIcons(JLabel[] labels){
+		
+		for(JLabel l: labels){
+			l.setIcon(tick);
+			l.setVisible(false);
+		}
+	}
+	
+	public ImageIcon scaleIcon(ImageIcon img){
+		Image image = img.getImage();
+		Image scaled = image.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+		img = new ImageIcon(scaled);  // transform it back
+		return img;
 	}
 }

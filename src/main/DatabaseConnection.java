@@ -81,7 +81,7 @@ public class DatabaseConnection {
 		if (departing) {
 			query += " AND ARRIVAL_TIME >= ? AND ARRIVAL_TIME <= ? order by Arrival_time LIMIT 5";
 		} else {
-			query += " AND ARRIVAL_TIME <= ? order by Arrival_time LIMIT 5";
+			query += " AND ARRIVAL_TIME <= ? order by Arrival_time";
 		}
 		// create the java statement
 		try {

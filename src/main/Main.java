@@ -30,10 +30,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
@@ -48,6 +51,8 @@ public class Main extends JFrame {
 	private JTextField txtMinute;
 	private JPanel panel_1;
 	private JLabel lblSorryNoRoutes;
+	private String currentTime;
+	private String estimateVal;
 	
 
 	/**
@@ -74,7 +79,8 @@ public class Main extends JFrame {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Main() {
-
+		currentTime = "";
+		estimateVal = "";
 		DatabaseConnection conn = new DatabaseConnection();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 821, 772);
@@ -84,7 +90,7 @@ public class Main extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		btn_font = new JToggleButton("Toggle Font Size");
+		btn_font = new JToggleButton("Increase Font Size");
 		btn_font.setForeground(new Color(0, 0, 128));
 		btn_font.setBackground(new Color(100, 149, 237));
 		btn_font.setToolTipText("Tap to increase / decrease font size");
@@ -162,18 +168,20 @@ public class Main extends JFrame {
 		comboBox_2.setBackground(new Color(255, 255, 255));
 		comboBox_2.setModel(new DefaultComboBoxModel(new String[] { "Arrive", "Depart" }));
 		comboBox_2.setSelectedIndex(1);
-		comboBox_2.setBounds(331, 168, 108, 25);
+		comboBox_2.setBounds(274, 168, 233, 25);
 		panel.add(comboBox_2);
 
 		JLabel lblMostPopularRoutes = new JLabel("Most popular routes");
 		lblMostPopularRoutes.setForeground(new Color(0, 0, 128));
 		lblMostPopularRoutes.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblMostPopularRoutes.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMostPopularRoutes.setBounds(10, 468, 765, 16);
+		lblMostPopularRoutes.setBounds(10, 469, 765, 16);
 
 		panel.add(lblMostPopularRoutes);
 
 		txtHints = new JTextArea();
+		txtHints.setLineWrap(true);
+		txtHints.setFont(new Font("Lucida Grande", Font.PLAIN, 22));
 		txtHints.setBounds(10, 626, 765, 80);
 		panel.add(txtHints);
 		txtHints.setText("Welcome to FlashClould! Tap [Search] to display all buses coming here next.");
@@ -243,8 +251,8 @@ public class Main extends JFrame {
 		panel.add(btn_Search);
 
 		JLabel lblHints = new JLabel("Hints");
-		lblHints.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblHints.setBounds(10, 601, 46, 14);
+		lblHints.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblHints.setBounds(10, 610, 46, 14);
 		panel.add(lblHints);
 
 		btn_font.addActionListener(new ActionListener() {
@@ -259,8 +267,9 @@ public class Main extends JFrame {
 		
 		panel.add(btn_font);
 		lbl_estimate = new JLabel("Estimated Time until next bus: ");
+		lbl_estimate.setVisible(false);
 		lbl_estimate.setForeground(new Color(0, 0, 128));
-		lbl_estimate.setBounds(38, 463, 586, 25);
+		lbl_estimate.setBounds(10, 425, 586, 25);
 		panel.add(lbl_estimate);
 		
 		panel_1 = new JPanel();
@@ -273,7 +282,19 @@ public class Main extends JFrame {
 		panel_1.add(scrollPane);
 
 		table_2 = new JTable();
+		table_2.setEnabled(false);
 		table_2.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		
+		ListSelectionModel cellSelectionModel = table_2.getSelectionModel();
+		cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 	
 		scrollPane.setViewportView(table_2);
 		
@@ -310,6 +331,8 @@ public class Main extends JFrame {
 		txtMinute.setColumns(2);
 		txtMinute.setBounds(423, 200, 71, 53);
 		panel.add(txtMinute);
+		
+		currentTime += txtHour.getText() + ":" + txtMinute.getText() + ":" + "00";
 		
 		JLabel label = new JLabel(":");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 25));
@@ -415,17 +438,27 @@ public class Main extends JFrame {
 				fromStop.add(new BusStop(stopName, time));
 			}
 			if (departing && !fromStop.isEmpty()) {
+				System.out.println("sds");
+				int i = 0;
 				rs2 = conn.getSpecificRoute(to, fromStop.get(0).getTime(), departing);
-				DateFormat formatter = new SimpleDateFormat("hh:mm");
-				java.util.Date currentTime = new java.util.Date();
-				java.util.Date arriveTime = formatter.parse(fromStop.get(0).getTime());
-				System.err.println(currentTime);
-				System.err.println(arriveTime);
-				long timeDiff = currentTime.getTime() - arriveTime.getTime();
-				String estimate = (timeDiff / 3600000) + " hours and "
-				                + (timeDiff % 3600000) / 60000 + " minutes";
-				lbl_estimate.setText(lbl_estimate.getText() + estimate);
-
+				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+				
+				Date currentT = format.parse(currentTime);
+				Date arriveTime = format.parse(fromStop.get(i).getTime());
+				String diff = timeDifference(currentT,arriveTime);
+				lbl_estimate.setText(diff);
+				
+					while(diff.length() == 0){
+						i++;
+						arriveTime = format.parse(fromStop.get(i).getTime());
+						diff = timeDifference(currentT,arriveTime);
+						lbl_estimate.setText(diff);
+					}
+				
+				
+				
+				
+				
 			} else {
 				rs2 = conn.getSpecificRoute(to, hour, departing);
 				
@@ -478,6 +511,8 @@ public class Main extends JFrame {
 			e1.printStackTrace();
 		} catch (ParseException e1) {
 			e1.printStackTrace();
+		} catch (IndexOutOfBoundsException e1) {
+			e1.printStackTrace();
 		}
 		conn.closeConnection();
 	}
@@ -503,10 +538,12 @@ public class Main extends JFrame {
 		if (enlarge) {
 		  for (JComponent element : elementList) {
 			element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() + 5));
+			btn_font.setText("Decrease Font Size");
 		  }
 		} else {
 		  for (JComponent element : elementList) {
 			element.setFont(new Font("Arial", Font.PLAIN, element.getFont().getSize() - 5));
+			btn_font.setText("Increase Font Size");
 		  }
 		}
 	}
@@ -554,4 +591,27 @@ public class Main extends JFrame {
 	}
 	
 	
+	
+	public String timeDifference(Date time1, Date time2) throws ParseException{
+		
+		long timeDiff = time2.getTime() - time1.getTime();
+		long estimateH = (timeDiff / 3600000);
+        long estimateM = (timeDiff % 3600000) / 60000;
+        System.out.println(estimateH);
+        System.out.println(estimateM);
+        
+        if(estimateM > 0){
+        	if(estimateH == 0){
+				estimateVal = ("Estimated Time until next bus: " + estimateM + " minutes");
+			}else{
+				estimateVal = ("Estimated Time until next bus: " + estimateH + " hours and " + estimateM + " minutes");
+			}
+        }
+        
+        if(estimateVal.length() > 0){
+        	lbl_estimate.setVisible(true);
+        }
+        
+        return estimateVal;
+	}
 }

@@ -94,28 +94,6 @@ public class Parser {
 		return insQueries;
 
 	}
-
-	/**
-	 * 
-	 * @param table
-	 *            The table to insert to
-	 * @param row
-	 *            The name of the row that the value is to be inserted to
-	 * @param value
-	 *            The value to be inserted
-	 * 
-	 *            createQuery, allows us to create a query with one row. Ensures
-	 *            that with only one row, the larger function will produce a
-	 *            string with one row Calls createQuery with the afformentioned
-	 *            arguments and strings "empty" for the other arguments
-	 * 
-	 */
-	public static void createQuery(String table, String row, String value) {
-		createQuery(table, row, value, "empty", "empty");
-	}
-	
-
-    }
         
     /**
      * 
@@ -125,7 +103,7 @@ public class Parser {
      * 
      * createQuery, allows us to create a query with one row. 
      * Ensures that with only one row, the larger function will produce a string with one row
-     * Calls createQuery with the afformentioned arguments and strings "empty" for the other arguments
+     * Calls createQuery with the aforementioned arguments and strings "empty" for the other arguments
      * 
      */
     private static void createQuery(String table, String row, String value) {

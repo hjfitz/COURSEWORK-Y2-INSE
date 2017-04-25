@@ -86,6 +86,7 @@ public class Timetable extends JFrame {
 		JButton btnDay = new JButton("Day");
 		btnDay.addMouseListener(new MouseAdapter() {
 			@Override
+			//get the times for the bus, within the next 24 hours
 			public void mouseClicked(MouseEvent arg0) {
 				getTimes("1 DAY", ourTable);
 
@@ -104,6 +105,7 @@ public class Timetable extends JFrame {
 		btnWeek.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				//get the times for the bus, within the next week
 				getTimes("1 WEEK", ourTable);
 			}
 		});
@@ -144,10 +146,7 @@ public class Timetable extends JFrame {
 		});
 
 		JButton btnTemp = new JButton("All Times");
-		btnTemp.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
+
 
 		// start adding code here
 
@@ -179,6 +178,10 @@ public class Timetable extends JFrame {
 				+ ",weekly or monthly timetable");
 
 		JButton btnSearch = new JButton("Search");
+		
+		/**
+		 * show the main form when we click the rigt button
+		 */
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Main mainForm = new Main();
@@ -187,6 +190,9 @@ public class Timetable extends JFrame {
 			}
 		});
 
+		/**
+		 * show the parser form when we click the button
+		 */
 		JButton btnUpdateRoutes = new JButton("Update Routes");
 		btnUpdateRoutes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -200,6 +206,7 @@ public class Timetable extends JFrame {
 		JButton btnSearchByRoute = new JButton("search by stop");
 		btnSearchByRoute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//get the routename from the combo box and search by that 
 				String routeName = cmbStops.getSelectedItem().toString();
 				getByRoute(routeName, ourTable);
 				
@@ -210,6 +217,7 @@ public class Timetable extends JFrame {
 		btnViewForSpecific.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
+					//get the week from the text field an search by that
 					getWeek(txtWeek.getText(), ourTable);
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -312,6 +320,7 @@ public class Timetable extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					//create a new timetable form, and show it
 					Timetable frame = new Timetable();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -322,102 +331,171 @@ public class Timetable extends JFrame {
 
 	}
 
+	
+	/**
+	 * given a date of the form yyyy-MM-dd, we format the day to make it look nicer
+	 * the date should be returned in the form 'Mon 08-Jan'
+	 * Uses simpleDateFormat to get a java.util.date
+	 * @param date the string to be formatted
+	 * @return nicely formatted date.
+	 * @throws ParseException in case the pattern passed doesn't match correctly.
+	 */
 	public static String parseDate(String date) throws ParseException {
+		
+		//create a format
 		SimpleDateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd");
+		
+		//parse the date and apply the pattern, store in var
 		java.util.Date parsedDate = iso8601.parse(date);
 		iso8601.applyPattern("EEE dd-MMM");
 		String day = iso8601.format(parsedDate);
-		//System.out.println(day);
 		return day;
 	}
 
 	/**
-	 * 
-	 * @param updPane
-	 *            the text pane to append the new text
-	 * @param query
-	 *            the query to search
+	 * nulls the table on the main form
+	 * searches the database for times, in a given interval
+	 * adds them to the table on the form
+	 * @param constraints constraints, if any, to be put on the SQL query
+	 * @param routeTable the table that we wish to add new data to
 	 */
 	@SuppressWarnings("unused")
 	public static void getTimes(String constraints, DefaultTableModel routeTable) {
+		
+		//null the table
 		routeTable.setRowCount(0);
+		
+		//connect to the database
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
+		
+		//create a default query, run that through the database
 		String qryGetRouteNums = qryGetRouteNumsStart + thisStop;
 		ResultSet routeNumbers = dbConn.runQuery(qryGetRouteNums);
-		String newTextField = "";
+		
+		//initialise variables
 		String date = "";
-		try {
-			while (routeNumbers.next()) {
-				String routeTimes = "";
+		try 
+		{
+			//go through the returned values in the database
+			while (routeNumbers.next()) 
+			{
+				//initialise variables to store information
 				String[] routeInfo = new String[2];
+				
+				//store the name of the route
 				routeInfo[0] = routeNumbers.getString("Route_Name");
 
-				newTextField += routeNumbers.getString("Route_Name") + ":\t";
-				String qryGetTimes = qryGetRoutes + routeNumbers.getInt("Route_ID") + " and Stop_ID = " + thisStop
-						+ qryGetRouteNumsEnd + curDate + "'";
-				if (constraints != "") {
-					qryGetTimes += "and Arrival_Time <= (SELECT '" + curDate + "' + INTERVAL " + constraints + ")";
-				}
+				String qryGetTimes = qryGetRoutes 
+						           + routeNumbers.getInt("Route_ID")
+						           + " and Stop_ID = " + thisStop
+						           + qryGetRouteNumsEnd + curDate + "'";
+				
+				//if there's any constraints, add them
+				if (constraints != "") qryGetTimes += "and Arrival_Time <= (SELECT '" + curDate + "' + INTERVAL " + constraints + ")";
+				
+				//order the results, for the user
 				qryGetTimes += " order by Arrival_Time ";
+				
+				//having created the query, run it
 				ResultSet times = dbConn.runQuery(qryGetTimes);
-				while (times.next()) {
+				
+				// loop through the results
+				while (times.next())
+				{
+					//attempt to parse the time we get, 
+					//this shouldn't crash because we assume the date from mysql to be always of the same format.
 					try {
 						date = parseDate(times.getDate("Arrival_Time").toString());
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
+					//format the output with the date, and the arrival time
 					String out = date + " " + times.getTime("Arrival_Time").toString();
-					newTextField += out;
-					routeTimes += out;
 					routeInfo[1] = out;
+					
+					//add out array to the table
 					routeTable.addRow(routeInfo);
 					routeInfo[0] = "";
 				}
-				newTextField += "\n\n\n";
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		//don't leave many open connections.
 		dbConn.closeConnection();
 	}
 	
+	/**
+	 * get the information for a selected route
+	 * put all of the info on the table on the form
+	 * @param routeName name of route to search for
+	 * @param routeTable table to put results
+	 */
 	@SuppressWarnings("unused")
-	//TODO make this fucker work
 	public static void getByRoute(String routeName, DefaultTableModel routeTable) {
+		
+		// null the table
 		routeTable.setRowCount(0);
+		
+		//connect to the database
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
+		
+		//prepare a query, run it and store the results in arrivalTimes
 		String query = "SELECT distinct Stop_Name, Arrival_Time from Arrival_Stop natural join Arrival_Times natural join Stop natual join Route where Route_Name = '" + routeName + "'";
 		ResultSet arrivalTimes = dbConn.runQuery(query);
-		String newTextField = "";
 		String date = "";
 		try {
-			while (arrivalTimes.next()) {
+			//go through the results, and store the information in an array (stopInfo)
+			//we use the array to put the information on to the table
+			while (arrivalTimes.next()) 
+			{
+				//create a store for the information
 				String stopInfo[] = new String[2];
+				
+				//store the name in [0]
 				stopInfo[0] = arrivalTimes.getString("Stop_Name");
+				
+				//attempt to parse the date
 				try {
 					date = parseDate(arrivalTimes.getDate("Arrival_Time").toString());
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
+				
+				//add information to th array, and add that array to the table
 				stopInfo[1] = date + " " + arrivalTimes.getTime("Arrival_Time").toString();
 				routeTable.addRow(stopInfo);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		//don't leave any open connections
 		dbConn.closeConnection();
 	}
 
+	/**
+	 * changes the stop that the search functions 'all times, month, day' 
+	 * so that we may search for a different stop. 
+	 * This is invoked when the user changes the stop in the combo box
+	 * @param cmb combo box that contains the route to change
+	 */
 	@SuppressWarnings("rawtypes")
 	public static void changeRouteNo(JComboBox cmb) {
+		
+		//prepare the query, connect to the database and 
 		String qry = "Select distinct Stop_ID from Stop where Stop_Name = '" + cmb.getSelectedItem().toString() + "'";
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
 		ResultSet stopID = dbConn.runQuery(qry);
+		
 		String stop = thisStop;
-		// System.out.println(stop);
+
+		//we want to change the stop number to the one of the selected item
+		//we've got the item in the result set, because we search where name=comboBox
+		//therefore, we get one result, and set stop to the id. we loop, because one item is returned.
 		try {
 			while (stopID.next()) {
 				stop = stopID.getString("Stop_ID");
@@ -425,19 +503,30 @@ public class Timetable extends JFrame {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		// System.out.println(stop);
 		dbConn.closeConnection();
+		//set global stop id to the stop.
 		thisStop = stop;
 
 	}
-	
+
+	/**
+	 * gets all of the routes from the database, and fills a combo box with their names
+	 * @param box the combo box to be populated.
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void getRoutes(JComboBox box) {
+		//prepare query
 		String query = "Select distinct * from Route";
+		
+		//connect to database
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
+		
+		//get route names from database
 		ResultSet routeNames = dbConn.runQuery(query);
 		try {
+			
+			//go through results and add item to combo box
 			while (routeNames.next()) {
 				String route = routeNames.getString("Route_Name");
 				box.addItem(route);
@@ -445,70 +534,116 @@ public class Timetable extends JFrame {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		//don't leave any open connections to the database
+		//to avoid poor performance
+		dbConn.closeConnection();
 	}
 
+	/**
+	 * gets the stop names from the database, and their ids
+	 * add them to a combo box
+	 * if the stop ID is equal to the set ID, set the selected item
+	 * @param box
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void getStops(JComboBox box) {
+		
+		//prepare a query
 		String qry = "Select distinct * from Stop";
+		
+		//set the variable for the current stop name
 		String curStopName = "";
+		
+		//connect to the database
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();
+		
+		//get all of the stop names from the database
 		ResultSet stopNames = dbConn.runQuery(qry);
 		try {
+			
+			//go through the results and add them to the combo box
 			while (stopNames.next()) {
+				//cast the stop id to a string for comparison
 				String curStopID = "" + stopNames.getInt("Stop_ID");
+				
+				//get the stop name from the result set and add to the combo box
 				String curStop = stopNames.getString("Stop_Name");
 				box.addItem(curStop);
-				if (curStopID.equals(thisStop)) {
-					curStopName = curStop;
-				}
+				
+				//set the name of the current stop to the variable
+				if (curStopID.equals(thisStop)) curStopName = curStop;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		//close the connection 
 		dbConn.closeConnection();
+		
+		//because we found the stop name that equals the id setting
+		//set the combo box of stop names to this stop.
 		box.setSelectedItem(curStopName);
 	}
 	
+	
+	/**
+	 * gets the bus times for a given week long period
+	 * @param weekStart begninning of the week
+	 * @param routeTable the table to add the information to
+	 * @throws ParseException exception thrown in case the date doesn't get parsed correctly
+	 */
 	@SuppressWarnings("deprecation")
 	public static void getWeek(String weekStart, DefaultTableModel routeTable) throws ParseException {
+		//null the table
 		routeTable.setRowCount(0);
+		
+		// set up a formatter for the time
 		String weekFormat = "yyyy-MM-dd";
 		SimpleDateFormat df = new SimpleDateFormat(weekFormat);
 		java.util.Date date = new java.util.Date();
 		date = df.parse(weekStart);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
+		//get the time a week from now
 		cal.add(Calendar.DATE, 7);
-		//wontfix 
-		//TODO
+
+		//format the date correctly for use in the sql query
 		String nextDate = "2017-" + (cal.getTime().getMonth() + 1) + "-" + cal.getTime().getDate();
-		System.out.println(nextDate);
+		
+		//connect to the database
 		DatabaseConnection dbconn = new DatabaseConnection();
 		dbconn.connect();
+		
+		//prepare the query
 		String query = "Select distinct * from Route natural join Stop natural join Arrival_Times natural join Arrival_Stop where Stop_ID = " + thisStop;
-		query += " and Arrival_Time >= '" + weekStart + "' and Arrival_Time <= '" + nextDate + "'";
-		System.out.println(query);
+		query += " and Arrival_Time >= '" + weekStart
+		      + "' and Arrival_Time <= '" + nextDate + "'";
+		
+		//get the times from the database
 		ResultSet stops = dbconn.runQuery(query);
-		try {
+		try 
+		{
+			//go through the result set returned
 			while (stops.next()) {
+				//retrieve the data from the list
 				String name = stops.getString("Route_Name");
 				Date dateStop = stops.getDate("Arrival_Time");
 				String time = stops.getTime("Arrival_Time").toString();
+				//format the strings
 				String parsedDate = parseDate(dateStop.toString());
 				String timeCol = parsedDate + " " + time;
+				//create an array to add to the table on the form 
 				String[] data = new String[2];
 				data[0] = name;
 				data[1] = timeCol;
+				
+				//add to the form
 				routeTable.addRow(data);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
 		}
+		dbconn.closeConnection();
 		
 	}
 }

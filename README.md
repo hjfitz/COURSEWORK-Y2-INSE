@@ -5,7 +5,7 @@ Javadoc can be found on the [github pages](hjfitz.github.io/inse-v2), or in docs
 ## Running
 add stuff here
 
-# To Dev
+## To Dev
 You need to install the following:
 - Window Builder
 - Swing Designer

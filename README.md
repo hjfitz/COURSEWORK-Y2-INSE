@@ -1,6 +1,6 @@
 # Flashcloud bus timetable software
 ## Documentation
-Javadoc can be found on the [github pages](hjfitz.github.io/inse-v2), or in docs/. The code has more comments in further detail that javadoc wouldn't have picked up.
+Javadoc can be found on the [github pages](https://hjfitz.github.io/inse-v2), hjfitz.github.io/inse-v2 - or in docs/. The code has more comments in further detail that javadoc wouldn't have picked up.
 
 ## Running
 add stuff here

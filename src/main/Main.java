@@ -580,11 +580,12 @@ public class Main extends JFrame {
 										.calculateTravelTime(toStop.get(i)
 												                   .getTime()
 												                   );
+				
 				//same as above, but we get the *cost*
 				String price = fromStop.get(i)
-									   .calculateCost(toStop.get(i)
-											                .getTime()
-											                );
+									   .calculateCost(fromStop.get(i)
+											   .getTravelTime());
+				
 				
 				//split the times in to hours and minutes (by splitting by ':'
 				String[] timeFrom = fromStop.get(i)

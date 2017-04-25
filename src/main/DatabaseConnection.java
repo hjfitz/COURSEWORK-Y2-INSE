@@ -13,6 +13,11 @@ public class DatabaseConnection {
 	private final String password = "root";
 	private Connection connection;
 
+	
+	/***
+	 * Connects to the database using specified host,user and password
+	 * if the connection fails prints an exception
+	 */
 	public void connect() {
 		try {
 			connection = DriverManager.getConnection(host, user, password);
@@ -22,7 +27,10 @@ public class DatabaseConnection {
 			System.out.println(err.getMessage());
 		}
 	}
-
+	
+	/***
+	 * Closes the connection the database
+	 */
 	public void closeConnection() {
 		try {
 			connection.close();
@@ -30,7 +38,12 @@ public class DatabaseConnection {
 			err.printStackTrace();
 		}
 	}
-
+	
+	/***
+	 * Runs the specified query in the database
+	 * @param qry  query to run in the database
+	 * @return result set of the query
+	 */
 	public ResultSet runQuery(String qry) {
 //		System.out.println("Attempting to run query: " + qry + "\n\n");
 		try {
@@ -42,7 +55,11 @@ public class DatabaseConnection {
 		}
 		return null;
 	}
-
+	
+	/***
+	 * Runs a insert query to the database
+	 * @param qry specified insert query
+	 */
 	public void runInsert(String qry) {
 //		System.out.println("Attempting to update database with: " + qry + "\n\n");
 		try {
@@ -53,6 +70,7 @@ public class DatabaseConnection {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	public ResultSet getPopRoutes(String location, String hour, boolean departing) {
 		String query = "select distinct * from Arrival_Times natural join Stop natural join Route natural join Popular where (Stop_Name = ?)";
@@ -76,6 +94,13 @@ public class DatabaseConnection {
 		return null;
 	}
 
+	/***
+	 * Runs the query for specified route
+	 * @param location specified bus stop
+	 * @param hour specified hour of travel
+	 * @param departing if arrive at that time or departing
+	 * @return
+	 */
 	public ResultSet getSpecificRoute(String location, String hour, boolean departing) {
 		String query = "select Arrival_Time, Stop_Name from Arrival_Times natural join Stop where (Stop_Name = ?)";
 		if (departing) {
@@ -101,6 +126,10 @@ public class DatabaseConnection {
 		return null;
 	}
 	
+	/***
+	 * Checks if the connection to the database is closed
+	 * @return true if database is closed else false
+	 */
 	public boolean isClosed(){
 		try {
 			return connection.isClosed();

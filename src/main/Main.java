@@ -49,13 +49,13 @@ public class Main extends JFrame {
 	private JTextArea txtHints;
 	private JTable table_2;
 	private JTextField txtMinute;
-	private JPanel panel_1;
 	private JLabel lblSorryNoRoutes;
 	private String currentTime;
 	private SimpleDateFormat format;
 	private ImageIcon tick = new ImageIcon("img/tick.png");
 	private ImageIcon cross = new ImageIcon("img/cross.png");
 	private JLabel label_1,label_2,label_3;
+	private JScrollPane scrollPane;
 	
 
 	/**
@@ -100,7 +100,7 @@ public class Main extends JFrame {
 		//connect to the database to fill the items on the field
 		DatabaseConnection conn = new DatabaseConnection();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 821, 772);
+		setBounds(100, 100, 1366, 768);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(135, 206, 250));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -108,6 +108,7 @@ public class Main extends JFrame {
 		contentPane.setLayout(null);
 
 		btn_font = new JToggleButton("Increase Font Size");
+		btn_font.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_font.setForeground(new Color(0, 0, 128));
 		btn_font.setBackground(new Color(100, 149, 237));
 		btn_font.setToolTipText("Tap to increase / decrease font size");
@@ -119,11 +120,11 @@ public class Main extends JFrame {
 
 			}
 		});
-		btn_font.setBounds(620, 11, 155, 23);
+		btn_font.setBounds(1116, 11, 186, 47);
 
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(135, 206, 250));
-		panel.setBounds(10, 6, 785, 717);
+		panel.setBounds(10, 6, 1340, 717);
 		contentPane.add(panel);
 		panel.setLayout(null);
 
@@ -131,7 +132,7 @@ public class Main extends JFrame {
 		lblSearchForA.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSearchForA.setForeground(new Color(0, 0, 128));
 		lblSearchForA.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
-		lblSearchForA.setBounds(10, -11, 765, 55);
+		lblSearchForA.setBounds(10, 5, 1320, 55);
 		panel.add(lblSearchForA);
 
 		JComboBox comboBox = new JComboBox();
@@ -142,7 +143,7 @@ public class Main extends JFrame {
 		comboBox.setModel(new DefaultComboBoxModel(new String[] { "Locks Way Road", "Lidl", "Fratton Station",
 				"Cambridge Road", "Winston Churchill Ave" }));
 
-		comboBox.setBounds(251, 71, 282, 47);
+		comboBox.setBounds(507, 71, 314, 37);
 
 		panel.add(comboBox);
 
@@ -152,13 +153,13 @@ public class Main extends JFrame {
 		combo_Arrive.setModel(new DefaultComboBoxModel(new String[] { "Locks Way Road", "Lidl", "Fratton Station",
 				"Cambridge Road", "Winston Churchill Ave" }));
 		combo_Arrive.setSelectedIndex(2);
-		combo_Arrive.setBounds(251, 130, 282, 37);
+		combo_Arrive.setBounds(507, 136, 318, 37);
 		panel.add(combo_Arrive);
 
 		JLabel lblTo = new JLabel("Depart from");
 		lblTo.setForeground(new Color(0, 0, 128));
 		lblTo.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblTo.setBounds(258, 60, 108, 16);
+		lblTo.setBounds(507, 54, 108, 16);
 		panel.add(lblTo);
 
 		JComboBox comboBox_2 = new JComboBox();
@@ -167,21 +168,21 @@ public class Main extends JFrame {
 		comboBox_2.setBackground(new Color(255, 255, 255));
 		comboBox_2.setModel(new DefaultComboBoxModel(new String[] { "Arrive", "Depart" }));
 		comboBox_2.setSelectedIndex(1);
-		comboBox_2.setBounds(274, 168, 233, 25);
+		comboBox_2.setBounds(542, 184, 233, 25);
 		panel.add(comboBox_2);
 
 		JLabel lblMostPopularRoutes = new JLabel("Most popular routes");
 		lblMostPopularRoutes.setForeground(new Color(0, 0, 128));
 		lblMostPopularRoutes.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblMostPopularRoutes.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMostPopularRoutes.setBounds(10, 469, 765, 16);
+		lblMostPopularRoutes.setBounds(317, 485, 765, 16);
 
 		panel.add(lblMostPopularRoutes);
 
 		txtHints = new JTextArea();
 		txtHints.setLineWrap(true);
 		txtHints.setFont(new Font("Lucida Grande", Font.PLAIN, 22));
-		txtHints.setBounds(10, 626, 765, 80);
+		txtHints.setBounds(178, 626, 1062, 80);
 		panel.add(txtHints);
 		txtHints.setText("Welcome to FlashClould! Tap [Search] to display all buses coming here next.");
 
@@ -203,14 +204,14 @@ public class Main extends JFrame {
 		// gets hour in 24h format
 		DateFormat formatter = new SimpleDateFormat("hh:mm");
 		txtHour.setText(Integer.toString(calendar.get(Calendar.HOUR_OF_DAY)));
-		txtHour.setBounds(278, 200, 71, 53);
+		txtHour.setBounds(544, 220, 71, 53);
 		panel.add(txtHour);
 		txtHour.setColumns(2);
 
 		JLabel lblArriveAt = new JLabel("Arrive at\n");
 		lblArriveAt.setForeground(new Color(0, 0, 128));
 		lblArriveAt.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblArriveAt.setBounds(261, 117, 88, 16);
+		lblArriveAt.setBounds(507, 119, 88, 16);
 		panel.add(lblArriveAt);
 
 		JButton btn_Search = new JButton("Search");
@@ -256,12 +257,12 @@ public class Main extends JFrame {
 			}
 		});
 
-		btn_Search.setBounds(300, 265, 164, 37);
+		btn_Search.setBounds(581, 303, 164, 37);
 		panel.add(btn_Search);
 
 		JLabel lblHints = new JLabel("Hints");
 		lblHints.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblHints.setBounds(10, 610, 46, 14);
+		lblHints.setBounds(178, 605, 46, 14);
 		panel.add(lblHints);
 
 		/**
@@ -299,27 +300,11 @@ public class Main extends JFrame {
 		lbl_estimate.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_estimate.setVisible(false);
 		lbl_estimate.setForeground(new Color(0, 0, 128));
-		lbl_estimate.setBounds(10, 432, 745, 25);
+		lbl_estimate.setBounds(37, 461, 1330, 25);
 		panel.add(lbl_estimate);
 
-		panel_1 = new JPanel();
-		panel_1.setBounds(10, 314, 765, 113);
-		panel.add(panel_1);
-		panel_1.setLayout(null);
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 765, 113);
-		panel_1.add(scrollPane);
-
-		table_2 = new JTable();
-		table_2.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-
-		scrollPane.setViewportView(table_2);
-
-		JLabel lblNewLabel = new JLabel("New label");
-		scrollPane.setColumnHeaderView(lblNewLabel);
-
 		JButton btnViewTimetables = new JButton("View timetables");
+		btnViewTimetables.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnViewTimetables.setForeground(new Color(0, 0, 128));
 		btnViewTimetables.setBackground(new Color(100, 149, 237));
 		btnViewTimetables.addActionListener(new ActionListener() {
@@ -328,11 +313,11 @@ public class Main extends JFrame {
 				timeForm.setVisible(true);
 			}
 		});
-		btnViewTimetables.setBounds(620, 40, 155, 23);
+		btnViewTimetables.setBounds(1116, 86, 186, 55);
 		panel.add(btnViewTimetables);
 
 		JTextPane txtpnPopRoutes = new JTextPane();
-		txtpnPopRoutes.setBounds(10, 486, 765, 103);
+		txtpnPopRoutes.setBounds(178, 503, 1058, 91);
 		panel.add(txtpnPopRoutes);
 
 		getOrderedPopularRoutes(txtpnPopRoutes);
@@ -347,21 +332,15 @@ public class Main extends JFrame {
 		}
 		txtMinute.setText(minute);
 		txtMinute.setColumns(2);
-		txtMinute.setBounds(423, 200, 71, 53);
+		txtMinute.setBounds(712, 220, 71, 53);
 		panel.add(txtMinute);
 
 		currentTime += txtHour.getText() + ":" + txtMinute.getText() + ":" + "00";
 
 		JLabel label = new JLabel(":");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		label.setBounds(382, 209, 12, 37);
+		label.setBounds(656, 226, 12, 37);
 		panel.add(label);
-
-		lblSorryNoRoutes = new JLabel("Sorry, no routes have been found");
-		lblSorryNoRoutes.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSorryNoRoutes.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
-		lblSorryNoRoutes.setBounds(10, 349, 765, 37);
-		panel.add(lblSorryNoRoutes);
 		
 		label_1 = new JLabel("");
 		label_1.setFont(new Font("Lucida Grande", Font.PLAIN, 5));
@@ -385,6 +364,24 @@ public class Main extends JFrame {
 		labels[0] = label_1;
 		labels[1] = label_2;
 		labels[2] = label_3;
+		
+		scrollPane = new JScrollPane();
+				scrollPane.setBounds(178, 351, 1059, 99);
+				panel.add(scrollPane);
+				
+						table_2 = new JTable();
+						table_2.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+						
+								scrollPane.setViewportView(table_2);
+								
+										JLabel lblNewLabel = new JLabel("New label");
+										scrollPane.setColumnHeaderView(lblNewLabel);
+										
+												lblSorryNoRoutes = new JLabel("Sorry, no routes have been found");
+												lblSorryNoRoutes.setHorizontalAlignment(SwingConstants.CENTER);
+												lblSorryNoRoutes.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
+												lblSorryNoRoutes.setBounds(35, 393, 1320, 37);
+												panel.add(lblSorryNoRoutes);
 		
 		/**
 		 * add event listeners to both combo boxes, to ensure that we don't search from and to on the same list.
@@ -549,10 +546,10 @@ public class Main extends JFrame {
 			// if we can't find any stops, notify the user by hiding the panel of times
 			// and showing a label with 'no routes found'. else, hide that label and show the panel.
 			if (fromStop.isEmpty()) {
-				panel_1.setVisible(false);
+				scrollPane.setVisible(false);
 				lblSorryNoRoutes.setVisible(true);
 			} else {
-				panel_1.setVisible(true);
+				scrollPane.setVisible(true);
 				lblSorryNoRoutes.setVisible(false);
 			}
 			

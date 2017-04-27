@@ -13,11 +13,19 @@ import javax.swing.table.TableModel;
 
 import org.junit.Test;
 
+/**
+ * 
+ * @author FlashCloud
+ * Class for testing the main functionality of the program. Tests include search queries and usability functions.
+ */
 public class MainTest {
 	JTable testTable   = new JTable();
 	JTextPane testPane = new JTextPane();
 	Main testMain      = new Main();
 
+	/**
+	 * Tests bus search from locks way road to fratton station at 12:00
+	 */
 	@Test
 	public void testSearchNormal() {
 		testMain.search("Locks Way Road", "Fratton Station", "12:00", false, testTable);
@@ -39,7 +47,9 @@ public class MainTest {
 		}
 	}
 	
-	@Test
+	/**
+	 * Tests bus search from the same bus stop (Lidl)
+	 */
 	public void testSearchEqualSStops() {
 		testMain.search("Lidl", "Lidl", "12:30", false, testTable);
 		TableModel results = testTable.getModel();

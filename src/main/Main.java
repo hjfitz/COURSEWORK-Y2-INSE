@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
@@ -67,6 +68,8 @@ public class Main extends JFrame {
 			public void run() {
 				try {
 					Main frame = new Main();
+					Dimension d = new Dimension(1366,768);
+					frame.setSize(d);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -82,6 +85,8 @@ public class Main extends JFrame {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Main() {
+		setTitle("FlashCloud");
+		setResizable(false);
 		currentTime = "";
 		
 		tick = scaleIcon(tick);

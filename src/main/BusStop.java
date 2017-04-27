@@ -92,8 +92,6 @@ public class BusStop {
 	 */
 	public String calculateCost(int journeyTime) {
 		int travelCost = (int) (0.6 * journeyTime);
-		System.out.println(journeyTime);
-		System.out.println(travelCost);
 		return travelCost + "p";
 	}
 	

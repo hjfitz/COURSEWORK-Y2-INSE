@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -28,6 +29,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Window.Type;
 
 @SuppressWarnings("serial")
 public class Timetable extends JFrame {
@@ -60,6 +62,9 @@ public class Timetable extends JFrame {
 
 	@SuppressWarnings("rawtypes")
 	public Timetable() {
+		setType(Type.UTILITY);
+		setTitle("FlashCloud");
+		setResizable(false);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1280, 768);
@@ -322,6 +327,8 @@ public class Timetable extends JFrame {
 				try {
 					//create a new timetable form, and show it
 					Timetable frame = new Timetable();
+					Dimension d = new Dimension(1366,768);
+					frame.setSize(d);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

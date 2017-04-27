@@ -1,7 +1,7 @@
 # Flashcloud bus timetable software
 
 ## Documentation
-Javadoc can be found on the [github pages](hjfitz.github.io/inse-v2), or in docs/. The code has more comments in further detail that javadoc wouldn't have picked up.
+Javadoc can be found on the [github pages](https://hjfitz.github.io/inse-v2), hjfitz.github.io/inse-v2 - or in docs/. The code has more comments in further detail that javadoc wouldn't have picked up.
 
 ## Setting up the Database
 MySQL is used for this, you will need to install it.
@@ -13,7 +13,7 @@ You will also need to ensure that you've got the correct database setup:
 ## Running
 The latest version may be found in `dist/`. You need to set up your database first. To run the file, navigate to `dist/` in the terminal and run `java -jar FlashCloud.jar`
 
-# To Dev
+## To Dev
 You need to install the following:
 - Window Builder
 - Swing Designer

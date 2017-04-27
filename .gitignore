@@ -9,3 +9,5 @@
 hs_err_pid*
 /bin/
 
+# files that are machine independent
+src/.metadata

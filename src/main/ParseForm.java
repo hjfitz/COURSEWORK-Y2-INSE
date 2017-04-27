@@ -12,6 +12,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+/**
+*
+* @author FlashCloud
+* Form to take input of json file and convert them into sql queries
+*/
 @SuppressWarnings("serial")
 public class ParseForm extends JFrame {
 
@@ -72,6 +77,10 @@ public class ParseForm extends JFrame {
 		panel.add(lblEnterTheName);
 	}
 
+	/**
+	 * Updates the database with new queries
+	 * @param insQueries array of insert queries used to iterate over
+	 */
 	private void updateDB(ArrayList<String> insQueries) {
 		DatabaseConnection dbConn = new DatabaseConnection();
 		dbConn.connect();

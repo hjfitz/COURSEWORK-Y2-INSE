@@ -1,5 +1,13 @@
 package main;
 
+/**
+ * 
+ * @author FlashCloud
+ * 
+ *  initalizes the bus stop values such as busName, time and travelTime
+ *  Has core functions to calculate travel time and travel cost
+ *
+ */
 public class BusStop {
 	private String busName;
 	private String time;
@@ -12,7 +20,7 @@ public class BusStop {
 	}
 
 	/**
-	 * gets the time of busstop
+	 * gets the time of bus stop
 	 * @return time
 	 */
 	public String getTime() {
@@ -20,7 +28,7 @@ public class BusStop {
 	}
 	
 	/***
-	 * sets the time of the busstop
+	 * sets the time of the bus stop
 	 * @param time
 	 */
 	public void setTime(String time) {
@@ -28,7 +36,7 @@ public class BusStop {
 	}
 
 	/***
-	 * gets the name of the busstop
+	 * gets the name of the bus stop
 	 * @return busName
 	 */
 	public String getBusName() {
@@ -36,7 +44,7 @@ public class BusStop {
 	}
 
 	/***
-	 * set the busstop name
+	 * set the bus stop name
 	 * @param busName
 	 */
 	public void setBusName(String busName) {
@@ -45,7 +53,7 @@ public class BusStop {
 
 	/***
 	 * Calculates the travel time of the journey
-	 * @param btime time of the arrival busstop
+	 * @param btime time of the arrival bus stop
 	 * @return formatted string as correct journey time
 	 */
 	public String calculateTravelTime(String btime) {

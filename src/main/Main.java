@@ -42,7 +42,7 @@ import javax.swing.table.DefaultTableModel;
  * 
  * @author FlashCloud
  * 
- * Main class of program which is the 1st user interface (out of 2). Allows the user to search for buses from different bus stops and times. 
+ * Main class of program which is the 1st user interface form opened. Allows the user to search for buses from different bus stops and times. 
  */
 @SuppressWarnings("serial")
 public class Main extends JFrame {

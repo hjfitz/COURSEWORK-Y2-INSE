@@ -18,7 +18,8 @@ import org.json.simple.parser.ParseException;
 
 /**
  *
- * @author hjf
+ * @author FlashCloud
+ * Creates queries for the program using the Json file. All insert query strings are stored in the array (insQueries)
  */
 public class Parser {
 

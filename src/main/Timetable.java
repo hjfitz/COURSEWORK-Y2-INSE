@@ -29,6 +29,11 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * 
+ * @author FlashCloud
+ * Second user interface of the program used to filter buses
+ */
 @SuppressWarnings("serial")
 public class Timetable extends JFrame {
 

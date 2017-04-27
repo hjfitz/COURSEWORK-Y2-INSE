@@ -2,6 +2,13 @@ package main;
 
 import static org.junit.Assert.*;
 
+
+/**
+ * 
+ * @author FlashCloud
+ * 
+ * Class for testing the main functionality of the TimeTable class. Includes getters, setters and validation of the form.
+ */
 import java.text.ParseException;
 
 import javax.swing.JComboBox;
@@ -23,6 +30,9 @@ public class TimetableTest {
 	// and raw data from the database *must* be used
 	// we test this first.
 	
+	/**
+	 * Tests the getStops() method
+	 */
 	@Test
 	public void testGetStops() {
 		int initialLength = testCmbRoutes.getItemCount();
@@ -30,6 +40,9 @@ public class TimetableTest {
 		assertNotSame(initialLength, testCmbRoutes.getItemCount());
 	}
 
+	/**
+	 * Tests the getRoutes() method
+	 */
 	@Test
 	public void testgetRoutes() {
 		int initialLength = testCmbStops.getItemCount();
@@ -37,6 +50,9 @@ public class TimetableTest {
 		assertNotSame(initialLength, testCmbStops.getItemCount());
 	}
 
+	/**
+	 * Tests the getTimes() method with a specific day
+	 */
 	@Test
 	public void testGetTimesDAY() {
 		int initialLength = testTableModel.getRowCount();
@@ -44,6 +60,9 @@ public class TimetableTest {
 		assertNotSame(initialLength, testTableModel.getRowCount());
 	}
 
+	/**
+	 * Tests the getTimes() method with a specific month
+	 */
 	@Test
 	public void testGetTimesMONTH() {
 		int initialLength = testTableModel.getRowCount();
@@ -51,6 +70,9 @@ public class TimetableTest {
 		assertNotSame(initialLength, testTableModel.getRowCount());
 	}
 
+	/**
+	 * Tests the getTimes() method with a specific week
+	 */
 	@Test
 	public void testGetTimesWEEK() {
 		int initialLength = testTableModel.getRowCount();
@@ -58,6 +80,9 @@ public class TimetableTest {
 		assertNotSame(initialLength, testTableModel.getRowCount());
 	}
 
+	/**
+	 * Tests the getTimes() method with null
+	 */
 	@Test
 	public void testGetTimesNULL() {
 		int initialLength = testTableModel.getRowCount();
@@ -67,6 +92,9 @@ public class TimetableTest {
 		assertNotSame(initialLength, testTableModel.getRowCount());
 	}
 
+	/**
+	 * Tests the getByRoute() function with a specific bus
+	 */
 	@Test
 	public void testGetByRoute() {
 		int initialLength = testTableModel.getRowCount();
@@ -74,6 +102,9 @@ public class TimetableTest {
 		assertNotSame(initialLength, testTableModel.getRowCount());
 	}
 
+	/**
+	 * Tests if the popular route is updating
+	 */
 	@Test
 	public void testChangeRouteNo() {
 		//firstly populate
@@ -84,6 +115,9 @@ public class TimetableTest {
 		assertNotSame("101", testTimetable.thisStop);
 	}
 	
+	/**
+	 * Tests if the getWeek() method works correctly
+	 */
 	@Test
 	public void testGetWeek() {
 		int initialLength = testTableModel.getRowCount();
@@ -95,6 +129,9 @@ public class TimetableTest {
 		}
 	}
 
+	/**
+	 * Tests if the getWeek() method works correctly in 2 years from current date 
+	 */
 	@Test
 	public void testGetWeekTwoYears() {
 		int initialLength = testTableModel.getRowCount();
@@ -109,6 +146,9 @@ public class TimetableTest {
 		assertSame(0, testTableModel.getRowCount());
 	}
 	
+	/**
+	 * Tests if the getWeek() method works correctly for date set in the past
+	 */
 	@Test
 	public void testGetWeekManyYearsAgo() {
 		int initialLength = testTableModel.getRowCount();
@@ -122,6 +162,9 @@ public class TimetableTest {
 		assertSame(0, testTableModel.getRowCount());
 	}
 	
+	/**
+	 * Tests if the getWeek() method works with incorrect formatting
+	 */
 	@Test
 	public void testGetWeekIncorrectParse() {
 		boolean passes = false;
@@ -137,6 +180,9 @@ public class TimetableTest {
 		}
 	}
 	
+	/**
+	 * Tests if the getWeek() method works with an incorrect date
+	 */
 	@Test
 	public void testGetWeekNonExistantDate() {
 		boolean passes = false;
@@ -153,6 +199,9 @@ public class TimetableTest {
 		
 	}
 
+	/**
+	 * Tests parseDate() method
+	 */
 	@Test
 	public void testParseDateNormal() {
 		String expected = "Thu 09-Mar";
@@ -163,7 +212,10 @@ public class TimetableTest {
 			fail();
 		}	
 	}
-	
+
+	/**
+	 * Tests if parseDate() method works on date with reverse order
+	 */
 	@Test
 	public void testParseDateDifferentOrder() {
 		boolean passes = false;
@@ -180,7 +232,10 @@ public class TimetableTest {
 			fail();
 		}
 	}
-	
+
+	/**
+	 * Tests if parseDate() method works with unknown date 
+	 */
 	@Test
 	public void testParseDateUnknownDate() {
 		boolean passes = false;
@@ -197,7 +252,10 @@ public class TimetableTest {
 			fail();
 		}
 	}
-	
+
+	/**
+	 * Tests if parseDate() method works with incorrect formatting
+	 */
 	@Test
 	public void testParseDateIncorrectFormat() {
 		boolean passes = false;

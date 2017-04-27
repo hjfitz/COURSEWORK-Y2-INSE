@@ -6,6 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * 
+ * @author FlashCloud
+ * 
+ * Connects the program to the local mysql database to be used for search queries
+ */
 public class DatabaseConnection {
 
 	private final String host = "jdbc:mysql://localhost/bustimes";
@@ -71,7 +77,13 @@ public class DatabaseConnection {
 		}
 	}
 	
-	
+	/**
+	 *  Returns the results of the query from the given variables:
+	 * @param location specified bus stop
+	 * @param hour specified hour of travel
+	 * @param departing if arrive at that time or departing
+	 * @return
+	 */
 	public ResultSet getPopRoutes(String location, String hour, boolean departing) {
 		String query = "select distinct * from Arrival_Times natural join Stop natural join Route natural join Popular where (Stop_Name = ?)";
 		if (departing) {

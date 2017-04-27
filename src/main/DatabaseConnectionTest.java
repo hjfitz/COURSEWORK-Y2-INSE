@@ -12,11 +12,20 @@ import org.junit.Test;
 
 import com.mysql.jdbc.Connection;
 
+/**
+ * 
+ * @author FlashCloud
+ * 
+ * Class for testing the main functionality of DatabaseConnection class. Tests include connecting, running various queries
+ */
 public class DatabaseConnectionTest {
 	
 	DatabaseConnection db = new DatabaseConnection();
 
 
+	/**
+	 * Checks if the program can connect to the local mysql database
+	 */
 	@Test
 	public void Connect() {
 		db.connect();
@@ -25,6 +34,9 @@ public class DatabaseConnectionTest {
 		assertNotEquals(true,db.isClosed()); // should pass, as the connection is opened
 	}
 
+	/**
+	 * Checks if the program can successfully disconnect to the local mysql database
+	 */
 	@Test
 	public void CloseConnection() {
 		db.connect();
@@ -34,6 +46,9 @@ public class DatabaseConnectionTest {
 	
 	}
 
+	/**
+	 * Tests the queries from one stop to the others
+	 */
 	@Test
 	public void RunQuery() {
 		db.connect();
@@ -62,6 +77,9 @@ public class DatabaseConnectionTest {
 		
 	}
 
+	/**
+	 * Tests if insertion into the database works
+	 */
 	@Test
 	public void RunInsert() {
 		
@@ -69,7 +87,9 @@ public class DatabaseConnectionTest {
 	}
 
 
-
+	/**
+	 * Tests getSpecificRoute() function and gets the correct information from the database
+	 */
 	@Test
 	public void GetSpecificRoute() {
 		db.connect();
@@ -112,6 +132,9 @@ public class DatabaseConnectionTest {
 		
 	}
 	
+	/**
+	 * Tests getPopRoute() function and gets the correct information from the database
+	 */
 	@Test
 	public void GetPopRoute() {
 		

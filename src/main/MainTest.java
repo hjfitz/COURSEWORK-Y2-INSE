@@ -16,7 +16,8 @@ import org.junit.Test;
 /**
  * 
  * @author FlashCloud
- * Class for testing the main functionality of the program. Tests include search queries and usability functions.
+ * 
+ * Class for testing the main functionality of the main class. Tests include search queries and usability functions.
  */
 public class MainTest {
 	JTable testTable   = new JTable();
@@ -48,7 +49,7 @@ public class MainTest {
 	}
 	
 	/**
-	 * Tests bus search from the same bus stop (Lidl)
+	 * Tests bus search from the same bus stop
 	 */
 	public void testSearchEqualSStops() {
 		testMain.search("Lidl", "Lidl", "12:30", false, testTable);
@@ -56,6 +57,9 @@ public class MainTest {
 		assertEquals(0, results.getRowCount());
 	}
 	
+	/**
+	 * Tests if bus search works with incorrect formatting
+	 */
 	@Test
 	public void testSearchWeirdDateFormatting() {
 		testMain.search("Locks Way Road",  "Fratton Station", "12-30", false, testTable);
@@ -63,6 +67,9 @@ public class MainTest {
 		assertEquals(0, results.getRowCount());
 	}
 	
+	/**
+	 * Tests if bus search works with string input
+	 */
 	@Test
 	public void testSearchWrongTime() {
 		testMain.search("Locks Way Road",  "Fratton Station", "Half 12", false, testTable);
@@ -79,7 +86,9 @@ public class MainTest {
 //		ResultSet results = dbconn.runQuery("Select distinct Route_Name, max(Route_Count) from Popular natural join Route");
 		
 	}
-	
+	/**
+	 * Tests the font increase function for usability
+	 */
 	@Test
 	public void testChangeFontSizeIncrease() {
 		JLabel lblTest1 = new JLabel();
@@ -92,6 +101,9 @@ public class MainTest {
 		assertEquals(lbltest2fontSizeBefore + 5, testList[1].getFont().getSize());	
 	}
 	
+	/**
+	 * Tests the font decrease function for usability
+	 */
 	@Test
 	public void testChangeFontSizeDecrease() {
 		JLabel lblTest1 = new JLabel();
@@ -104,6 +116,9 @@ public class MainTest {
 		assertEquals(lbltest2fontSizeBefore - 5, testList[1].getFont().getSize());
 	}
 	
+	/**
+	 * Tests the font increase / decrease function when tapped thrice 
+	 */
 	@Test
 	public void testChangeFontSizeTriplePress() {
 		JLabel lblTest1 = new JLabel();

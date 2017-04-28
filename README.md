@@ -11,6 +11,7 @@ You will also need to ensure that you've got the correct database setup:
 	- You can change the password in DatabaseConnection.java if you'd rather not change your MySQL password.
 
 ## Running
+You will need a JDK of version 1.8
 The latest version may be found in `dist/`. You need to set up your database first. To run the file, navigate to `dist/` in the terminal and run `java -jar FlashCloud.jar`
 
 ## To Dev
